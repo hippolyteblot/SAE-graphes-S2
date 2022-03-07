@@ -8,8 +8,10 @@ public class Main {
     public static void main(String []args) throws Exception {
 
         Main m = new Main();
+        
         m.remplir();
         m.afficherSommets();
+        m.ajout();
 
     }
 
@@ -100,5 +102,39 @@ public class Main {
             linkTabCl[i] = new Cell(linkSm, route);
         }
         return linkTabCl;
+    }
+    public void ajout(){
+        Scanner entre = new Scanner(System.in);
+        System.out.println("\t Menu Ajout");
+        System.out.println("1- Ajouter une ville");
+        System.out.println("2- Ajouter un restaurant");
+        System.out.println("3- Ajouter un lieu de loisir");
+        System.out.println("Que voulez vous faire");
+        String lieu;
+        int optionmenu =entre.nextInt();
+        switch(optionmenu){
+            case 2:
+                System.out.println("Entrer le nom du restaurant");
+                entre.nextLine();
+                lieu = entre.nextLine();
+                Sommet sm = new Sommet(lieu,1 );
+                System.out.println("R,"+lieu);
+                break;
+            case 3:
+                System.out.println("Entrer le nom du lieu de loisir");
+                entre.nextLine();
+                lieu = entre.nextLine();
+                Sommet sm = new Sommet(lieu,2 );
+                System.out.println("L,"+lieu);
+                break;
+            default:
+                System.out.println("Entrer le nom de la ville");
+                entre.nextLine();
+                lieu = entre.nextLine();
+                Sommet sm = new Sommet(lieu,0 );
+                System.out.println("V,"+lieu);
+                break;
+        }
+        entre.close();
     }
 }
