@@ -124,14 +124,14 @@ public class Main {
                 System.out.println("Entrer le nom du lieu de loisir");
                 entre.nextLine();
                 lieu = entre.nextLine();
-                Sommet sm = new Sommet(lieu,2 );
+                //Sommet sm = new Sommet(lieu,2 );
                 System.out.println("L,"+lieu);
                 break;
             default:
                 System.out.println("Entrer le nom de la ville");
                 entre.nextLine();
                 lieu = entre.nextLine();
-                Sommet sm = new Sommet(lieu,0 );
+                //Sommet sm = new Sommet(lieu,0 );
                 System.out.println("V,"+lieu);
                 break;
         }
