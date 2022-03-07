@@ -1,0 +1,6 @@
+V,Macon:A,60::V,Meyzieu;;
+V,Meyzieu:A,60::V,Macon;D,5::R,McDo-Decines;;
+R,McDo-Decines:D,50::V,Lyon;;
+V,Lyon: R,50::R,McDo-Decines;;
+V,Anis: A,1::R,Rayane;;
+R,Rayane:;;
