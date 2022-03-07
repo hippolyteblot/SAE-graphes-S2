@@ -15,6 +15,7 @@ public class Main {
 
     Main() throws Exception {
         lect = new Lecteur("data.txt");
+        DrawCircle dc = new DrawCircle(tab, 800, 800);
     }
 
     public void afficherSommets(){
@@ -89,8 +90,11 @@ public class Main {
         int nbLink = part2.split("[a-z];").length;
         Cell linkTabCl[] = new Cell[nbLink];
         for(int i = 0;i < nbLink-1; i++){
+            System.out.println("avant = " + part2);
             String linkStr = part2.split(";[A-Z]")[i];
+            
             String strSm = linkStr.split("::")[1];
+
             String allRoad = linkStr.split("::")[0];;
             int km = Integer.parseInt(allRoad.split(",")[1]);
             int type = findTypeRoad(allRoad.split(",")[0]);
