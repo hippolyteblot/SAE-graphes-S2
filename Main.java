@@ -14,6 +14,10 @@ public class Main {
         m.afficherSommets();
         m.dc = new DrawCircle(m.tab, 1200, 800);
 
+        while(true){
+            
+        }
+
     }
 
     Main() throws Exception {
