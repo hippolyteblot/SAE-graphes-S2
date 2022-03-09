@@ -1,6 +1,6 @@
 class Road{
 
-    private int type; // 0 : autoroute, 1 : departementale, 2 : regionnale
+    private int type; // 0 : autoroute, 1 : departementale, 2 : regionnale, 3 : nationnale
     private int km;
 
     public Road(){
@@ -23,6 +23,9 @@ class Road{
                 typeStr = "departementale";
                 break;
             case 2:
+                typeStr = "regionnale";
+                break;
+            case 3:
                 typeStr = "regionnale";
                 break;
             default:

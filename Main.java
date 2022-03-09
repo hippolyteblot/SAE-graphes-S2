@@ -12,12 +12,7 @@ public class Main {
         m.remplir();
         m.findEquivalence();
         m.afficherSommets();
-        m.dc = new DrawCircle(m.tab, 1200, 800);
-
-        while(true){
-            
-        }
-
+        m.dc = new DrawCircle(m.tab, 900, 750);
     }
 
     Main() throws Exception {
@@ -27,15 +22,10 @@ public class Main {
 
     public void afficherSommets(){
         for(int i = 0; i < this.tab.size(); i++){
-            System.out.print(this.tab.get(i).getOrigin().getValue().getName() + " : ");
-            System.out.print(this.tab.get(i).getOrigin().getValue().getStringType());
             Cell cl = this.tab.get(i).getOrigin().getSuivant();
             for(int j = 0; j < this.tab.get(i).lenghtList()-1; j++){
-                System.out.print(" -> (" + cl.getRoute().getTypeStr() + " de " 
-                    + cl.getRoute().getKm() + "km) " + cl.getValue().getName());
                 cl = cl.getSuivant();
             }
-            System.out.println("");
         }
     }
 
@@ -85,6 +75,9 @@ public class Main {
             case "R":
                 typeS = 2;
                 break;
+            case "N":
+                typeS = 3;
+                break;
             default:
                 typeS = 0;
                 break;
@@ -119,14 +112,12 @@ public class Main {
             if(this.tab.get(i).getOrigin().getSuivant() != null){
                 Cell cl = this.tab.get(i).getOrigin().getSuivant();
 
-                System.out.println(this.tab.get(i).lenghtList()-1);
                 for(int j = 1; j < this.tab.get(i).lenghtList(); j++){
                     
                     for(int k = 0; k < this.tab.size(); k++){
 
                         if(this.tab.get(k).getOrigin().getValue().getName().equals(cl.getValue().getName())){
                             this.tab.get(k).getOrigin().setValue(cl.getValue());
-                            System.out.println("ici");
                         }
                     }
                     cl = cl.getSuivant();
