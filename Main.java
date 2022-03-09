@@ -116,27 +116,32 @@ public class Main {
         System.out.println("Que voulez vous faire");
         String lieu;
         int optionmenu =entre.nextInt();
+        Sommet sm = new Sommet();
         switch(optionmenu){
             case 2:
                 System.out.println("Entrer le nom du restaurant");
                 entre.nextLine();
                 lieu = entre.nextLine();
-                Sommet sm = new Sommet(lieu,1 );
+                sm = new Sommet(lieu,1 );
                 System.out.println("R,"+lieu);
+                this.tab.add(new Liste(new Cell(sm)));
+
                 break;
             case 3:
                 System.out.println("Entrer le nom du lieu de loisir");
                 entre.nextLine();
                 lieu = entre.nextLine();
-                //Sommet sm = new Sommet(lieu,2 );
+                sm = new Sommet(lieu,2 );
                 System.out.println("L,"+lieu);
+                this.tab.add(new Liste(new Cell(sm)));
                 break;
             default:
                 System.out.println("Entrer le nom de la ville");
                 entre.nextLine();
                 lieu = entre.nextLine();
-                //Sommet sm = new Sommet(lieu,0 );
+                sm = new Sommet(lieu,0 );
                 System.out.println("V,"+lieu);
+                this.tab.add(new Liste(new Cell(sm)));
                 break;
         }
         entre.close();
