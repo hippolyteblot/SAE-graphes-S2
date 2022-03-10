@@ -27,8 +27,8 @@ public class DrawCircle extends JFrame implements MouseListener {
         addMouseListener(this);
 
         setVisible(true);
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerUpdate(), (long) 1, (long) 1);
+        /*timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerUpdate(), (long) 1, (long) 1);*/
 
         
     }
@@ -259,7 +259,7 @@ public class DrawCircle extends JFrame implements MouseListener {
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
                 g2d.setColor(Color.white);
-                g2d.fillRect(0, 0, width, height);
+                g2d.fillRect(0, 0, width, height); // TODO : Colorer uniquement les zones des sommets
                 g2d.setStroke(new BasicStroke(5));
                 g2d.setColor(Color.cyan);
                 g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
@@ -268,7 +268,7 @@ public class DrawCircle extends JFrame implements MouseListener {
                 paint(this.getGraphics());
             }
         }
-        
+        update(this.getGraphics());
     }
 
     @Override
