@@ -4,20 +4,26 @@ public class Main {
 
     Lecteur lect;
     ArrayList<Liste> tab = new ArrayList<Liste>();
+    DrawCircle dc;
 
     public static void main(String []args) throws Exception {
 
         Main m = new Main();
-        
         m.remplir();
+        m.findEquivalence();
         m.afficherSommets();
-        m.ajout();
+        m.supprimerRoad();
+        //m.dc = new DrawCircle(m.tab, 1200, 800);
+
+        while(true){
+            
+        }
 
     }
 
     Main() throws Exception {
         lect = new Lecteur("data.txt");
-        DrawCircle dc = new DrawCircle(tab, 800, 800);
+        
     }
 
     public void afficherSommets(){
@@ -92,7 +98,6 @@ public class Main {
         int nbLink = part2.split("[a-z];").length;
         Cell linkTabCl[] = new Cell[nbLink];
         for(int i = 0;i < nbLink-1; i++){
-            System.out.println("avant = " + part2);
             String linkStr = part2.split(";[A-Z]")[i];
             
             String strSm = linkStr.split("::")[1];
@@ -107,7 +112,7 @@ public class Main {
         }
         return linkTabCl;
     }
-    public void ajout(){
+    public void ajoutSommet(){
         Scanner entre = new Scanner(System.in);
         System.out.println("\t Menu Ajout");
         System.out.println("1- Ajouter une ville");
@@ -145,5 +150,40 @@ public class Main {
                 break;
         }
         entre.close();
+    }
+
+    public void supprimerSommet(){
+
+    }
+    public void supprimerRoad(){
+        int pos=-1;
+        for(int i = 0; i < this.tab.size(); i++){
+            if(this.tab.get(i).getOrigin().getValue().getName().equalsIgnoreCase("lyon")){
+                pos =i;
+            }
+        }
+        this.tab.get(pos);
+    }
+    public void findEquivalence(){
+
+        for(int i = 0; i < this.tab.size(); i++){
+            
+            if(this.tab.get(i).getOrigin().getSuivant() != null){
+                Cell cl = this.tab.get(i).getOrigin().getSuivant();
+
+                System.out.println(this.tab.get(i).lenghtList()-1);
+                for(int j = 1; j < this.tab.get(i).lenghtList(); j++){
+                    
+                    for(int k = 0; k < this.tab.size(); k++){
+
+                        if(this.tab.get(k).getOrigin().getValue().getName().equals(cl.getValue().getName())){
+                            this.tab.get(k).getOrigin().setValue(cl.getValue());
+
+                        }
+                    }
+                    cl = cl.getSuivant();
+                }
+            }
+        }
     }
 }

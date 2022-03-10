@@ -36,6 +36,13 @@ public class Liste {
         }
         return count;
     }
+    public Cell getACell(int indice){
+        Cell cl = this.getOrigin();
+        for(int i = 0; i < indice; i ++){
+            cl = cl.getSuivant();
+        }
+        return cl;
+    }
     public void supprimer(int indice){
 
     }
