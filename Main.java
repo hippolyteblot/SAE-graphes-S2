@@ -12,6 +12,7 @@ public class Main {
         m.remplir();
         m.findEquivalence();
         m.afficherSommets();
+<<<<<<< HEAD
         m.supprimerRoad();
         //m.dc = new DrawCircle(m.tab, 1200, 800);
 
@@ -19,6 +20,9 @@ public class Main {
             
         }
 
+=======
+        m.dc = new DrawCircle(m.tab, 900, 750);
+>>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
     }
 
     Main() throws Exception {
@@ -28,15 +32,10 @@ public class Main {
 
     public void afficherSommets(){
         for(int i = 0; i < this.tab.size(); i++){
-            System.out.print(this.tab.get(i).getOrigin().getValue().getName() + " : ");
-            System.out.print(this.tab.get(i).getOrigin().getValue().getStringType());
             Cell cl = this.tab.get(i).getOrigin().getSuivant();
             for(int j = 0; j < this.tab.get(i).lenghtList()-1; j++){
-                System.out.print(" -> (" + cl.getRoute().getTypeStr() + " de " 
-                    + cl.getRoute().getKm() + "km) " + cl.getValue().getName());
                 cl = cl.getSuivant();
             }
-            System.out.println("");
         }
     }
 
@@ -85,6 +84,9 @@ public class Main {
                 break;
             case "R":
                 typeS = 2;
+                break;
+            case "N":
+                typeS = 3;
                 break;
             default:
                 typeS = 0;
@@ -171,14 +173,16 @@ public class Main {
             if(this.tab.get(i).getOrigin().getSuivant() != null){
                 Cell cl = this.tab.get(i).getOrigin().getSuivant();
 
-                System.out.println(this.tab.get(i).lenghtList()-1);
                 for(int j = 1; j < this.tab.get(i).lenghtList(); j++){
                     
                     for(int k = 0; k < this.tab.size(); k++){
 
                         if(this.tab.get(k).getOrigin().getValue().getName().equals(cl.getValue().getName())){
                             this.tab.get(k).getOrigin().setValue(cl.getValue());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
                         }
                     }
                     cl = cl.getSuivant();

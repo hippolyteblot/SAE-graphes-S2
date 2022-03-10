@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 V,Lyon:A,50::V,Tarare;A,70::V,St Etienne;A,100::V,Valence;D,5::V,Villeurbane;D,10::V,Bron;A,30::V,Villefranche-sur-Saone;D,5::L,Parc Tete d'or;;
 V,Roanne:N,40::V,Tarare;N,50::V,Feurs;N,50::V,Vichy;D,40::V,Thiers;
 V,Tarare:A,50::V,Lyon;D,30::V,Feurs;N,40::V,Roanne;;
@@ -5,6 +6,21 @@ V,Villeurbane:D,5::V,Lyon;D,10::V,Bron;A,60::V,Bourg-en-Bresse;A,60::V,Chambery;
 V,Monbrison:D,30::V,St Etienne;D,20::V,Feurs;;
 V,Bron:D,10::V,Lyon;D,10::V,Villeurbane;A,70::V,Grenoble;D,5::R,Brasserie George;D,10::L,Musee des Confluence;;
 V,Macon:A,40::V,Villefranche-sur-Saone;A,30::V,Bourg-en-Bresse;D,5::R,La Fabuleuse Cantine;N,90::L,Le Pal;;
+=======
+V,Lyon:A,50::V,Tarare;A,70::V,St Etienne;A,100::V,Valence;D,5::V,Villeurbane;D,10::V,Bron;A,30::V,Villefranche-sur-Saone;;
+V,Roanne:N,40::V,Tarare;N,50::V,Feurs;N,50::V,Vichy;;
+R,Troisgros:;;
+R,La Girole:;;
+V,Tarare:A,50::V,Lyon;D,30::V,Feurs;N,40::V,Roanne;;
+L,Alpe d'Huez:;;
+V,Villeurbane:D,5::V,Lyon;D,10::V,Bron;A,60::V,Bourg-en-Bresse;A,60::V,Chambery;;
+V,Monbrison:D,30::V,St Etienne;D,20::V,Feurs;;
+R,Chez mamie lise:;;
+V,Bron:D,10::V,Lyon;D,10::V,Villeurbane;A,70::V,Grenoble;;
+L,Mine de st Etienne:;;
+L,Parc Tete d'or:;;
+V,Macon:A,40::V,Villefranche-sur-Saone;A,30::V,Bourg-en-Bresse;;
+>>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
 V,St Etienne:D,30::V,Monbrison;A,70::V,Lyon;D,80::V,Valence;D,50::V,Feurs;;
 V,Grenoble:A,70::V,Bron;A,30::V,Chanbery;A,80::V,Valence;D,5::R,La Girole;D,30::L,Cinéma Les Méliès;;
 V,Chambery:A,60::V,Villeurbane;A,30::V,Grenoble;A,40::V,Annecy;;
@@ -13,6 +29,7 @@ V,Feurs:D,20::V,Monbrison;N,50::V,Roanne;D,30::V,Tarare;D,50::V,St Etienne;;
 V,Villefranche-sur-Saone:A,30::V,Lyon;A,40::V,Macon;D,40::L,Branche Evasion;;
 V,Valence:D,80::V,St Etienne;A,100::V,Lyon;A,80::V,Grenoble;D,30::L,:Cinéma Les Méliès;;
 V,Geneve:N,30::V,Annecy;A,80::V,Bourg-en-Bresse;;
+<<<<<<< HEAD
 V,Annecy:N,30::V,Geneve;A,40::V,Chambery;D.5::R,Chez mamie lise;;
 V,Vichy:N,50::V,Roanne;D,30::V,Thiers;D,60::L,Le Pal;;
 V,Thiers:D,40::V,Roanne;D,30::V,Vichy;D,35::R,Troisgros;;
@@ -28,3 +45,11 @@ L,Cinéma Les Méliès:D,30::V,Valence;D,30::V,Grenoble;;
 L,Parc Tete d'or:D,5::V,Villeurbane;D,5::V,Lyon;;
 L,Alpe d'Huez:D,35::V,Grenoble;;
 L,Branche Evasion:D,40::V,Bourg-en-Bresse;D,40::V,Villefranche-sur-Saone;;
+=======
+V,Annecy:N,30::V,Geneve;A,40::V,Chambery;;
+V,Vichy:N,50::V,Roanne;;
+R,Brasserie George:;;
+R,La Fabuleuse Cantine:;;
+L,L'Appart:;;
+L,Musee des Confluence:;;
+>>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
