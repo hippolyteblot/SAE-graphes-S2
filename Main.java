@@ -13,6 +13,7 @@ public class Main {
         m.findEquivalence();
         m.afficherSommets();
         m.dc = new DrawCircle(m.tab, 900, 750);
+        
     }
 
     Main() throws Exception {
