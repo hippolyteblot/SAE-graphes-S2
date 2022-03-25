@@ -40,6 +40,7 @@ public class Main {
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
+            System.out.println(line);
             line = line.replace(" ", "");
             String part1 = line.split(":[A-Z]|;|:")[0];
             String part2 = line.split("[a-z]:")[1];
@@ -175,7 +176,6 @@ public class Main {
 
                         if(this.tab.get(k).getOrigin().getValue().getName().equals(cl.getValue().getName())){
                             this.tab.get(k).getOrigin().setValue(cl.getValue());
-
                         }
                     }
                     cl = cl.getSuivant();

@@ -1,24 +1,42 @@
-import javax.swing.*;
-
-import java.util.Timer;
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.Timer;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 public class DrawCircle extends JFrame implements MouseListener {
 
     ArrayList<Liste> tab;
     private int width;
     private int height;
-    Color color = new Color(0,0,0);
+    Color backgroundColor = new Color(30,30,30);
     Timer timer;
+    JTextField yourInpuFieldt;
+    JTextField yourInpuFieldt2;
 
     public DrawCircle(ArrayList<Liste> tab, int width, int height){
 
         this.width = width;
         this.height = height;
         this.tab = tab;
+
+        yourInpuFieldt = new JTextField(16);
+        yourInpuFieldt2 = new JTextField(16);
 
         setTitle("Graphe");
         setSize(this.width, this.height);
@@ -27,17 +45,12 @@ public class DrawCircle extends JFrame implements MouseListener {
         addMouseListener(this);
 
         setVisible(true);
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerUpdate(), (long) 1, (long) 1);
 
+        //this.getGraphics().setColor(backgroundColor);
+        //this.getGraphics().fillRect(0, 0, width, height);
+        /*timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerUpdate(), (long) 1, (long) 1);*/
         
-    }
-
-    public class TimerUpdate extends TimerTask {
-
-        public void run() {
-            update();
-        }
     }
 
     public void update() {
@@ -46,11 +59,28 @@ public class DrawCircle extends JFrame implements MouseListener {
 
     @Override
     public void paint(Graphics g) {
+        setLayout(new BorderLayout());
+        setVisible(true);
 
         Graphics2D g2d = (Graphics2D) g;
+        
+
         int a = 0;
         int b = 0;
+        /*
+        JPanel p = new JPanel();
+        p.setLayout(null);
+        setLocationRelativeTo(null);
+        p.setSize(width, height);
+        p.setLocation(new Point(-8,-31));
+        p.setVisible(true);
+        add(p);
         
+
+        Graphics g2 = p.getGraphics();
+
+        Graphics2D g2d2 = (Graphics2D) g2;
+        */
 
         g2d.setStroke(new BasicStroke(2));
         setPos();
@@ -60,19 +90,33 @@ public class DrawCircle extends JFrame implements MouseListener {
                 a++;
                 b = 0;
             }
-            g2d.setColor(Color.black);
-            plainCircle(g2d);
-
-
-
-            paintLink(g, this.tab.get(i), i, false);
+            /*
+            if(true){
+                JLabel j2 = new JLabel(this.tab.get(i).getOrigin().getValue().getName());
+                j2.setBounds(new Rectangle(50+150*b,50+150*a, 50, 50));
+                j2.setBorder(new LineBorder(Color.RED, 4));
+                
+                p.add(j2);
+                
+            }
+            */
 
             g2d.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
             Ellipse2D.Double circle = new Ellipse2D.Double(50+150*b, 50+150*a, 50, 50);
             g2d.fill(circle);
+            plainCircle(g2d);
+
+
+            paintLink(g, this.tab.get(i), i, false, 0);
+            
             g2d.drawOval(50+150*b, 50+150*a, 50, 50);
+
             b++;
+            
         }
+        //p.setVisible(true);
+        //add(p);
+        setVisible(true);
     }
 
     public void plainCircle(Graphics2D g2d){
@@ -106,7 +150,7 @@ public class DrawCircle extends JFrame implements MouseListener {
         }
     }
 
-    public void paintLink(Graphics g, Liste ls, int indice2, boolean exception){
+    public void paintLink(Graphics g, Liste ls, int indice2, boolean exception, int TTL){
 
         int length = ls.lenghtList();
         Cell actuel = ls.getOrigin().getSuivant();
@@ -126,6 +170,10 @@ public class DrawCircle extends JFrame implements MouseListener {
                     cl.getValue().getX()+25, // x2
                     cl.getValue().getY()+25 // y2
                     );
+                g2d.drawOval(cl.getValue().getX()-2, 
+                    cl.getValue().getY()-2, 50+4, 50+4);
+                if(TTL > 0)
+                    paintLink(g, this.tab.get(indice), indice, exception, TTL-1);
             }
             g2d.setStroke(new BasicStroke(2));
             g2d.setColor(this.getRoadColor(actuel)); 
@@ -139,6 +187,7 @@ public class DrawCircle extends JFrame implements MouseListener {
         }
         g2d.setStroke(new BasicStroke(3));
     }
+
     public int findSm(String nom){
         int indice = 0;
         for(int i = 0;i < this.tab.size(); i++){
@@ -158,13 +207,13 @@ public class DrawCircle extends JFrame implements MouseListener {
     }
 
     public Color nextColorR(){
-        return new Color(this.color.getRed()+50, this.color.getGreen(), this.color.getBlue());
+        return new Color(Color.black.getRed()+50, Color.black.getGreen(), Color.black.getBlue());
     }
     public Color nextColorG(){
-        return new Color(this.color.getRed(), this.color.getGreen()+50, this.color.getBlue());
+        return new Color(Color.black.getRed(), Color.black.getGreen()+50, Color.black.getBlue());
     }
     public Color nextColorB(){
-        return new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue()+50);
+        return new Color(Color.black.getRed(), Color.black.getGreen(), Color.black.getBlue()+50);
     }
 
     public Color getRoadColor(Cell cl){
@@ -204,6 +253,7 @@ public class DrawCircle extends JFrame implements MouseListener {
     public void addResizeEvent(){
         addComponentListener((ComponentListener) new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
+                update();
                 Rectangle r = getBounds();
                 setWidth(r.width);
                 setHeight(r.height);
@@ -255,20 +305,18 @@ public class DrawCircle extends JFrame implements MouseListener {
         int y = e.getY();
         Graphics2D g2d = (Graphics2D) this.getGraphics();
 
-
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
-                g2d.setColor(Color.white);
-                g2d.fillRect(0, 0, width, height);
+                
+                g2d.fillRect(0, 0, width, height); // TODO : Colorer uniquement les zones des sommets
                 g2d.setStroke(new BasicStroke(5));
                 g2d.setColor(Color.cyan);
                 g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
                     this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
-                paintLink(this.getGraphics(), this.tab.get(i), i, true);
-                paint(this.getGraphics());
+                paintLink(this.getGraphics(), this.tab.get(i), i, true, 0);
             }
         }
-        
+        update(this.getGraphics());
     }
 
     @Override
