@@ -12,17 +12,13 @@ public class Main {
         m.remplir();
         m.findEquivalence();
         m.afficherSommets();
-<<<<<<< HEAD
-        m.supprimerRoad();
-        //m.dc = new DrawCircle(m.tab, 1200, 800);
+
+         m.supprimerRoad();
+        m.dc = new DrawCircle(m.tab, 1200, 800);
 
         while(true){
             
         }
-
-=======
-        m.dc = new DrawCircle(m.tab, 900, 750);
->>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
     }
 
     Main() throws Exception {
@@ -179,10 +175,7 @@ public class Main {
 
                         if(this.tab.get(k).getOrigin().getValue().getName().equals(cl.getValue().getName())){
                             this.tab.get(k).getOrigin().setValue(cl.getValue());
-<<<<<<< HEAD
 
-=======
->>>>>>> 5bd7f99e1cde26fb79600f3039ae894f2516a7a1
                         }
                     }
                     cl = cl.getSuivant();
