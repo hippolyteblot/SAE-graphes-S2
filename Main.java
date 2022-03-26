@@ -11,9 +11,21 @@ public class Main {
         Main m = new Main();
         m.remplir();
         m.findEquivalence();
-        m.afficherSommets();
-        m.dc = new DrawCircle(m.tab, 900, 750);
+        //m.afficherSommets();
         
+        Sommet sm1 = m.tab.get(0).getOrigin().getValue();
+        Sommet sm2 = m.tab.get(1).getOrigin().getValue();
+        System.out.println("Sommet 1 : " + sm1.getName() + ", Sommet 2 : " + sm2.getName());
+
+        PathSearcher ps = new PathSearcher(m.tab);
+        m.dc = new DrawCircle(m.tab, 900, 750, ps);
+        
+
+        ArrayList<String> ls =  ps.dijkstra(sm1, sm2);
+        for(int i = 0; i < ls.size(); i++){
+            System.out.print(" -> " + ls.get(i));
+        }
+
     }
 
     Main() throws Exception {
@@ -23,19 +35,24 @@ public class Main {
 
     public void afficherSommets(){
         for(int i = 0; i < this.tab.size(); i++){
+            System.out.print(this.tab.get(i).getOrigin().getValue().getName() + " : ");
+            System.out.print(this.tab.get(i).getOrigin().getValue().getStringType());
             Cell cl = this.tab.get(i).getOrigin().getSuivant();
             for(int j = 0; j < this.tab.get(i).lenghtList()-1; j++){
+                System.out.print(" -> (" + cl.getRoute().getTypeStr() + " de " 
+                    + cl.getRoute().getKm() + "km) " + cl.getValue().getName());
                 cl = cl.getSuivant();
             }
+            System.out.println("");
         }
     }
+
 
     public void remplir() throws Exception {
         
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
-            System.out.println(line);
             line = line.replace(" ", "");
             String part1 = line.split(":[A-Z]|;|:")[0];
             String part2 = line.split("[a-z]:")[1];
@@ -179,3 +196,4 @@ public class Main {
         }
     }
 }
+

@@ -7,7 +7,7 @@ public class Sommet {
     private int Y;
 
     Sommet(){
-        this.name = "Habitation";
+        this.name = null;
         this.type = 0; 
     }
     Sommet(String name, int type){
@@ -46,5 +46,8 @@ public class Sommet {
     }
     public void setY(int Y) {
         this.Y = Y;
+    }
+    public String toString(){
+        return this.name;
     }
 }

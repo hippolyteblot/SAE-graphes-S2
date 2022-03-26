@@ -14,10 +14,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
 public class DrawCircle extends JFrame implements MouseListener {
 
@@ -29,11 +28,17 @@ public class DrawCircle extends JFrame implements MouseListener {
     JTextField yourInpuFieldt;
     JTextField yourInpuFieldt2;
 
-    public DrawCircle(ArrayList<Liste> tab, int width, int height){
+    Sommet tmp1;
+    Sommet tmp2;
+
+    PathSearcher ps;
+
+    public DrawCircle(ArrayList<Liste> tab, int width, int height, PathSearcher ps){
 
         this.width = width;
         this.height = height;
         this.tab = tab;
+        this.ps = ps;
 
         yourInpuFieldt = new JTextField(16);
         yourInpuFieldt2 = new JTextField(16);
@@ -62,12 +67,11 @@ public class DrawCircle extends JFrame implements MouseListener {
         setLayout(new BorderLayout());
         setVisible(true);
 
-        Graphics2D g2d = (Graphics2D) g;
         
 
         int a = 0;
         int b = 0;
-        /*
+        
         JPanel p = new JPanel();
         p.setLayout(null);
         setLocationRelativeTo(null);
@@ -80,9 +84,9 @@ public class DrawCircle extends JFrame implements MouseListener {
         Graphics g2 = p.getGraphics();
 
         Graphics2D g2d2 = (Graphics2D) g2;
-        */
+        
 
-        g2d.setStroke(new BasicStroke(2));
+        g2d2.setStroke(new BasicStroke(2));
         setPos();
 
         for(int i = 0; i < this.tab.size(); i++){
@@ -91,32 +95,35 @@ public class DrawCircle extends JFrame implements MouseListener {
                 b = 0;
             }
             /*
-            if(true){
+            if(false){
                 JLabel j2 = new JLabel(this.tab.get(i).getOrigin().getValue().getName());
                 j2.setBounds(new Rectangle(50+150*b,50+150*a, 50, 50));
                 j2.setBorder(new LineBorder(Color.RED, 4));
-                
-                p.add(j2);
+                add(j2);
                 
             }
             */
 
-            g2d.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
+            g2d2.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
             Ellipse2D.Double circle = new Ellipse2D.Double(50+150*b, 50+150*a, 50, 50);
-            g2d.fill(circle);
-            plainCircle(g2d);
+            g2d2.fill(circle);
+            plainCircle(g2d2);
 
 
-            paintLink(g, this.tab.get(i), i, false, 0);
+            paintLink(g2, this.tab.get(i), i, false, 0);
             
-            g2d.drawOval(50+150*b, 50+150*a, 50, 50);
+            g2d2.drawOval(50+150*b, 50+150*a, 50, 50);
 
             b++;
             
         }
+        
+
+        //p.setOpaque(false);
         //p.setVisible(true);
-        //add(p);
-        setVisible(true);
+        
+        //setVisible(true);
+        
     }
 
     public void plainCircle(Graphics2D g2d){
@@ -300,7 +307,6 @@ public class DrawCircle extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {
 
-
         int x = e.getX();
         int y = e.getY();
         Graphics2D g2d = (Graphics2D) this.getGraphics();
@@ -321,14 +327,37 @@ public class DrawCircle extends JFrame implements MouseListener {
 
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
-        // TODO Auto-generated method stub
+
+        System.out.println("ici c ok");
+
+        int x = e.getX();
+        int y = e.getY();
+
+        for(int i = 0; i < this.tab.size(); i++){
+            if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
+                this.tmp1 = this.tab.get(i).getOrigin().getValue();
+                break;
+            }
+        }
         
     }
 
     @Override
     public void mouseReleased(java.awt.event.MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
+        int x = e.getX();
+        int y = e.getY();
+
+        for(int i = 0; i < this.tab.size(); i++){
+            if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
+                this.tmp2 = this.tab.get(i).getOrigin().getValue();
+                break;
+            }
+        }
+        ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
+        for(int i = 0; i < ls.size(); i++){
+            System.out.print(" -> " + ls.get(i));
+        }
     }
 
     @Override

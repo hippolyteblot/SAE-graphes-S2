@@ -7,9 +7,11 @@ public class Cell {
 
     Cell(){
         this.value = new Sommet();
+        this.route = new Road();
     }
     Cell(Sommet sommet){
         this.value = sommet;
+        this.route = new Road();
     }
     Cell(Sommet sommet, Road route){
         this.value = sommet;
