@@ -1,0 +1,1 @@
+lect = new Lecteur("data.txt");

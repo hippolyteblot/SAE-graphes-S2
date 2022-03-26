@@ -195,6 +195,30 @@ public class DrawCircle extends JFrame implements MouseListener {
         g2d.setStroke(new BasicStroke(3));
     }
 
+    public void paintSpecificLink(Sommet sm1, Sommet sm2){
+
+        Graphics g = getGraphics();
+        Graphics2D g2d = (Graphics2D) g;
+        
+        int indice2 = ps.indexSm2(sm1);
+
+        for(int i = 0; i < tab.get(indice2).lenghtList(); i++){
+            if(tab.get(indice2).getACell(i).getValue().getName().equals(sm2.getName())){
+                g2d.setStroke(new BasicStroke(4));
+                g2d.setColor(Color.blue); 
+                Cell goodOne = tab.get(ps.indexSm2(sm2)).getOrigin();
+                g.drawLine(
+                    tab.get(indice2).getOrigin().getValue().getX()+25, // x1
+                    tab.get(indice2).getOrigin().getValue().getY()+25, // y1
+                    goodOne.getValue().getX()+25, // x2
+                    goodOne.getValue().getY()+25 // y2
+                    );
+                System.out.println(tab.get(indice2).getACell(i).getValue().getY());
+                System.out.println("Lien entre " + sm1.getName() + " et " + sm2.getName());
+            }
+        }
+    }
+
     public int findSm(String nom){
         int indice = 0;
         for(int i = 0;i < this.tab.size(); i++){
@@ -330,14 +354,22 @@ public class DrawCircle extends JFrame implements MouseListener {
 
         int x = e.getX();
         int y = e.getY();
+        Graphics2D g2d = (Graphics2D) this.getGraphics();
+        
+        g2d.setColor(Color.white);
+        g2d.fillRect(0, 0, width, height);
+        paint(getGraphics());
 
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
+                g2d.setColor(Color.blue);
+                g2d.setStroke(new BasicStroke(5));
+                g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
+                    this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
                 this.tmp1 = this.tab.get(i).getOrigin().getValue();
                 break;
             }
         }
-        
     }
 
     @Override
@@ -345,17 +377,30 @@ public class DrawCircle extends JFrame implements MouseListener {
 
         int x = e.getX();
         int y = e.getY();
+        Graphics2D g2d = (Graphics2D) this.getGraphics();
 
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
+                g2d.setColor(Color.blue);
+                g2d.setStroke(new BasicStroke(5));
+                g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
+                    this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
                 this.tmp2 = this.tab.get(i).getOrigin().getValue();
                 break;
             }
         }
         ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
-        for(int i = 0; i < ls.size(); i++){
+
+        System.out.println();
+        for(int i = 0; i < ls.size()-1; i++){
+            Sommet sm1 = ps.findSmByString(ls.get(i));
+            Sommet sm2 = ps.findSmByString(ls.get(i+1));
+            g2d.setColor(Color.blue);
+            g2d.setStroke(new BasicStroke(4));
+            paintSpecificLink(sm1, sm2);
             System.out.print(" -> " + ls.get(i));
         }
+        System.out.println();
     }
 
     @Override

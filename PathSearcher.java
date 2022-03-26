@@ -102,4 +102,13 @@ public class PathSearcher {
         }
         return index;
     }
+
+    public Sommet findSmByString(String name){
+
+        for(int i = 0; i < tab.size(); i++){
+            if(tab.get(i).getOrigin().getValue().getName().equals(name))
+                return tab.get(i).getOrigin().getValue();
+        }
+        return new Sommet();
+    }
 }

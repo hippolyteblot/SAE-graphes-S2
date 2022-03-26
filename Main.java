@@ -13,18 +13,10 @@ public class Main {
         m.findEquivalence();
         //m.afficherSommets();
         
-        Sommet sm1 = m.tab.get(0).getOrigin().getValue();
-        Sommet sm2 = m.tab.get(1).getOrigin().getValue();
-        System.out.println("Sommet 1 : " + sm1.getName() + ", Sommet 2 : " + sm2.getName());
 
         PathSearcher ps = new PathSearcher(m.tab);
         m.dc = new DrawCircle(m.tab, 900, 750, ps);
         
-
-        ArrayList<String> ls =  ps.dijkstra(sm1, sm2);
-        for(int i = 0; i < ls.size(); i++){
-            System.out.print(" -> " + ls.get(i));
-        }
 
     }
 
