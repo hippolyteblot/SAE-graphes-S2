@@ -328,8 +328,6 @@ public class DrawCircle extends JFrame implements MouseListener {
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
 
-        System.out.println("ici c ok");
-
         int x = e.getX();
         int y = e.getY();
 
