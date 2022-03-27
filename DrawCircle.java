@@ -3,7 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.JFrame;
-//import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -23,6 +21,11 @@ public class DrawCircle extends JFrame implements MouseListener {
     ArrayList<Liste> tab;
     private int width;
     private int height;
+
+    private Graphics g;
+    private Graphics2D g2d;
+
+    private boolean touched;
     Color backgroundColor = new Color(30,30,30);
     Timer timer;
     JTextField yourInpuFieldt;
@@ -32,6 +35,7 @@ public class DrawCircle extends JFrame implements MouseListener {
     Sommet tmp2;
 
     PathSearcher ps;
+    JPanel p = new JPanel();
 
     public DrawCircle(ArrayList<Liste> tab, int width, int height, PathSearcher ps){
 
@@ -39,10 +43,9 @@ public class DrawCircle extends JFrame implements MouseListener {
         this.height = height;
         this.tab = tab;
         this.ps = ps;
+        this.touched = false;
 
-        yourInpuFieldt = new JTextField(16);
-        yourInpuFieldt2 = new JTextField(16);
-
+        setPosSm();
         setTitle("Graphe");
         setSize(this.width, this.height);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -50,11 +53,6 @@ public class DrawCircle extends JFrame implements MouseListener {
         addMouseListener(this);
 
         setVisible(true);
-
-        //this.getGraphics().setColor(backgroundColor);
-        //this.getGraphics().fillRect(0, 0, width, height);
-        /*timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerUpdate(), (long) 1, (long) 1);*/
         
     }
 
@@ -64,69 +62,42 @@ public class DrawCircle extends JFrame implements MouseListener {
 
     @Override
     public void paint(Graphics g) {
+
+        this.g = p.getGraphics();
+        this.g2d = (Graphics2D) g;
+        add(p);
         setLayout(new BorderLayout());
         setVisible(true);
-
-        
-
-        int a = 0;
-        int b = 0;
         
         JPanel p = new JPanel();
         p.setLayout(null);
         setLocationRelativeTo(null);
         p.setSize(width, height);
-        p.setLocation(new Point(-8,-31));
         p.setVisible(true);
         add(p);
         
 
-        Graphics g2 = p.getGraphics();
-
-        Graphics2D g2d2 = (Graphics2D) g2;
-        
-
-        g2d2.setStroke(new BasicStroke(2));
-        setPos();
+        g2d.setStroke(new BasicStroke(2));
 
         for(int i = 0; i < this.tab.size(); i++){
-            if((b*150+150) > this.width){
-                a++;
-                b = 0;
-            }
-            /*
-            if(false){
-                JLabel j2 = new JLabel(this.tab.get(i).getOrigin().getValue().getName());
-                j2.setBounds(new Rectangle(50+150*b,50+150*a, 50, 50));
-                j2.setBorder(new LineBorder(Color.RED, 4));
-                add(j2);
-                
-            }
-            */
 
-            g2d2.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
-            Ellipse2D.Double circle = new Ellipse2D.Double(50+150*b, 50+150*a, 50, 50);
-            g2d2.fill(circle);
-            plainCircle(g2d2);
+            g2d.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
+            Ellipse2D.Double circle = new Ellipse2D.Double(tab.get(i).getOrigin().getValue().getX(), 
+                tab.get(i).getOrigin().getValue().getY(), 
+                50, 50);
+            g2d.fill(circle);
+            plainCircle();
 
 
-            paintLink(g2, this.tab.get(i), i, false, 0);
+            paintLink(this.tab.get(i), i, false, 0);
             
-            g2d2.drawOval(50+150*b, 50+150*a, 50, 50);
-
-            b++;
-            
+            g2d.drawOval(tab.get(i).getOrigin().getValue().getX(), 
+                tab.get(i).getOrigin().getValue().getY(),
+                50, 50);
         }
-        
-
-        //p.setOpaque(false);
-        //p.setVisible(true);
-        
-        //setVisible(true);
-        
     }
 
-    public void plainCircle(Graphics2D g2d){
+    public void plainCircle(){
 
         int a = 0;
         int b = 0;
@@ -143,7 +114,7 @@ public class DrawCircle extends JFrame implements MouseListener {
             b++;
         }
     }
-    public void setPos(){
+    public void setPosSm(){
 
         int a = 0;
         int b = 0;
@@ -157,12 +128,10 @@ public class DrawCircle extends JFrame implements MouseListener {
         }
     }
 
-    public void paintLink(Graphics g, Liste ls, int indice2, boolean exception, int TTL){
+    public void paintLink(Liste ls, int indice2, boolean exception, int TTL){
 
         int length = ls.lenghtList();
         Cell actuel = ls.getOrigin().getSuivant();
-
-        Graphics2D g2d = (Graphics2D) g;
 
         for(int i = 1; i < length; i++){
             int indice = findSm(actuel.getValue().getName());
@@ -171,7 +140,7 @@ public class DrawCircle extends JFrame implements MouseListener {
             if(exception){
                 g2d.setStroke(new BasicStroke(7));
                 g2d.setColor(Color.cyan);
-                g.drawLine(
+                g2d.drawLine(
                     this.tab.get(indice2).getOrigin().getValue().getX()+25, // x1
                     this.tab.get(indice2).getOrigin().getValue().getY()+25, // y1
                     cl.getValue().getX()+25, // x2
@@ -180,11 +149,11 @@ public class DrawCircle extends JFrame implements MouseListener {
                 g2d.drawOval(cl.getValue().getX()-2, 
                     cl.getValue().getY()-2, 50+4, 50+4);
                 if(TTL > 0)
-                    paintLink(g, this.tab.get(indice), indice, exception, TTL-1);
+                    paintLink(this.tab.get(indice), indice, exception, TTL-1);
             }
             g2d.setStroke(new BasicStroke(2));
             g2d.setColor(this.getRoadColor(actuel)); 
-            g.drawLine(
+            g2d.drawLine(
                 this.tab.get(indice2).getOrigin().getValue().getX()+25, // x1
                 this.tab.get(indice2).getOrigin().getValue().getY()+25, // y1
                 cl.getValue().getX()+25, // x2
@@ -196,25 +165,20 @@ public class DrawCircle extends JFrame implements MouseListener {
     }
 
     public void paintSpecificLink(Sommet sm1, Sommet sm2){
-
-        Graphics g = getGraphics();
-        Graphics2D g2d = (Graphics2D) g;
         
         int indice2 = ps.indexSm2(sm1);
 
         for(int i = 0; i < tab.get(indice2).lenghtList(); i++){
             if(tab.get(indice2).getACell(i).getValue().getName().equals(sm2.getName())){
                 g2d.setStroke(new BasicStroke(4));
-                g2d.setColor(Color.blue); 
+                g2d.setColor(Color.red); 
                 Cell goodOne = tab.get(ps.indexSm2(sm2)).getOrigin();
-                g.drawLine(
+                g2d.drawLine(
                     tab.get(indice2).getOrigin().getValue().getX()+25, // x1
                     tab.get(indice2).getOrigin().getValue().getY()+25, // y1
                     goodOne.getValue().getX()+25, // x2
                     goodOne.getValue().getY()+25 // y2
                     );
-                System.out.println(tab.get(indice2).getACell(i).getValue().getY());
-                System.out.println("Lien entre " + sm1.getName() + " et " + sm2.getName());
             }
         }
     }
@@ -301,6 +265,13 @@ public class DrawCircle extends JFrame implements MouseListener {
         return false;
     }
 
+    public void moveAllPosition(){
+
+        for(int i = 0; i < tab.size(); i++){
+            tab.get(i).getOrigin().getValue().setX(tab.get(i).getOrigin().getValue().getX()-100);
+        }
+    }
+
 
 
     public ArrayList<Liste> getTab() {
@@ -327,26 +298,24 @@ public class DrawCircle extends JFrame implements MouseListener {
         this.height = height;
     }
 
-    // Click
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {
 
         int x = e.getX();
         int y = e.getY();
-        Graphics2D g2d = (Graphics2D) this.getGraphics();
 
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
                 
-                g2d.fillRect(0, 0, width, height); // TODO : Colorer uniquement les zones des sommets
                 g2d.setStroke(new BasicStroke(5));
                 g2d.setColor(Color.cyan);
                 g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
                     this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
-                paintLink(this.getGraphics(), this.tab.get(i), i, true, 0);
+                paintLink(this.tab.get(i), i, true, 0);
             }
         }
-        update(this.getGraphics());
+        
+        System.out.println("zoom");
     }
 
     @Override
@@ -354,7 +323,6 @@ public class DrawCircle extends JFrame implements MouseListener {
 
         int x = e.getX();
         int y = e.getY();
-        Graphics2D g2d = (Graphics2D) this.getGraphics();
         
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, width, height);
@@ -362,14 +330,19 @@ public class DrawCircle extends JFrame implements MouseListener {
 
         for(int i = 0; i < this.tab.size(); i++){
             if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
-                g2d.setColor(Color.blue);
+                g2d.setColor(Color.red);
                 g2d.setStroke(new BasicStroke(5));
                 g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
                     this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
                 this.tmp1 = this.tab.get(i).getOrigin().getValue();
+                touched = true;
                 break;
             }
         }
+        /*
+        if(!touched){
+            moveAllPosition();
+        }*/
     }
 
     @Override
@@ -377,30 +350,36 @@ public class DrawCircle extends JFrame implements MouseListener {
 
         int x = e.getX();
         int y = e.getY();
-        Graphics2D g2d = (Graphics2D) this.getGraphics();
 
-        for(int i = 0; i < this.tab.size(); i++){
-            if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
-                g2d.setColor(Color.blue);
-                g2d.setStroke(new BasicStroke(5));
-                g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
-                    this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
-                this.tmp2 = this.tab.get(i).getOrigin().getValue();
-                break;
+        if(touched){
+            
+            for(int i = 0; i < this.tab.size(); i++){
+                if(checkSmArea(x, y, this.tab.get(i).getOrigin().getValue())){
+                    g2d.setColor(Color.red);
+                    g2d.setStroke(new BasicStroke(5));
+                    g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
+                        this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
+                    this.tmp2 = this.tab.get(i).getOrigin().getValue();
+                    break;
+                }
             }
-        }
-        ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
+            ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
 
-        System.out.println();
-        for(int i = 0; i < ls.size()-1; i++){
-            Sommet sm1 = ps.findSmByString(ls.get(i));
-            Sommet sm2 = ps.findSmByString(ls.get(i+1));
-            g2d.setColor(Color.blue);
-            g2d.setStroke(new BasicStroke(4));
-            paintSpecificLink(sm1, sm2);
-            System.out.print(" -> " + ls.get(i));
+            System.out.println();
+            for(int i = 0; i < ls.size()-1; i++){
+                Sommet sm1 = ps.findSmByString(ls.get(i));
+                Sommet sm2 = ps.findSmByString(ls.get(i+1));
+                g2d.setColor(Color.red);
+                g2d.setStroke(new BasicStroke(4));
+                paintSpecificLink(sm1, sm2);
+                if(i == 0)
+                    System.out.print(ls.get(i));
+                else
+                    System.out.print(" -> " + ls.get(i));
+            }
+            System.out.println(" -> " + tmp2.getName());
+            touched = false;
         }
-        System.out.println();
     }
 
     @Override
