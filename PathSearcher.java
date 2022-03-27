@@ -111,4 +111,37 @@ public class PathSearcher {
         }
         return new Sommet();
     }
+
+
+    // Retourne la ville la plus ouverte à 2 de distances en fonction du mode (0 = ville, 1 = restaurant, ...)
+    public Sommet mostOpen(Sommet sm1, Sommet sm2, int mode){
+
+        ArrayList<String> alreadyCheck = new ArrayList<String>();
+        int[] counter = {0,0};
+
+        Liste[] ls = {tab.get(indexSm2(sm1)),tab.get(indexSm2(sm2))};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < ls[i].lenghtList(); j++){
+                if(ls[i].getACell(j).getValue().getType() == mode &&
+                    !alreadyCheck.contains(ls[i].getACell(j).getValue().getName())){
+                    alreadyCheck.add((ls[i].getACell(j).getValue().getName()));
+                    counter[i]++;
+                }
+                Liste liste = tab.get(indexSm2(ls[i].getACell(j).getValue()));
+                for(int k = 0; k < liste.lenghtList(); k++){
+                    if(liste.getACell(k).getValue().getType() == mode &&
+                        !alreadyCheck.contains(liste.getACell(k).getValue().getName())){
+                        alreadyCheck.add((liste.getACell(k).getValue().getName()));
+                        counter[i]++;
+                    }
+                }
+            }
+            alreadyCheck = new ArrayList<String>();;
+        }
+        if(counter[0] > counter[1])
+            return sm1;
+        else if(counter[1] > counter[0])
+            return sm2;
+        return new Sommet();
+    }
 }

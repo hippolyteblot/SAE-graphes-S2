@@ -15,7 +15,13 @@ public class Main {
         
 
         PathSearcher ps = new PathSearcher(m.tab);
-        m.dc = new DrawCircle(m.tab, 900, 750, ps);
+        //m.dc = new DrawCircle(m.tab, 900, 750, ps);
+
+        Sommet sm1 = m.tab.get(0).getOrigin().getValue();
+        Sommet sm2 = m.tab.get(9).getOrigin().getValue();
+
+        System.out.println("Qui ? - " + sm1.getName() + " " + sm2.getName());
+        System.out.println(ps.mostOpen(sm1, sm2, 2).getName());
         
 
     }

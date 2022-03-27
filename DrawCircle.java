@@ -71,7 +71,7 @@ public class DrawCircle extends JFrame implements MouseListener {
         
         JPanel p = new JPanel();
         p.setLayout(null);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(p);
         p.setSize(width, height);
         p.setVisible(true);
         add(p);
@@ -267,9 +267,12 @@ public class DrawCircle extends JFrame implements MouseListener {
 
     public void moveAllPosition(){
 
+        /*
         for(int i = 0; i < tab.size(); i++){
             tab.get(i).getOrigin().getValue().setX(tab.get(i).getOrigin().getValue().getX()-100);
         }
+        */
+        p.setBounds(10,10,200,200);
     }
 
 
@@ -339,10 +342,9 @@ public class DrawCircle extends JFrame implements MouseListener {
                 break;
             }
         }
-        /*
         if(!touched){
             moveAllPosition();
-        }*/
+        }
     }
 
     @Override
