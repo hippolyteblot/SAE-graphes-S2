@@ -19,25 +19,34 @@ public class Main {
         Main m = new Main();
         m.remplir();
         m.findEquivalence();
-        m.afficherSommets();
-        //m.ajoutSommet();
-        //m.ajoutRoad();
-        //m.supprimerSommet();
-        //m.supprimerRoad("Lyon", "Tarare","A","50");
-        m.dc = new DrawCircle(m.tab, 1200, 800);
+        //m.afficherSommets();
         
-        while(true){
-            
-        }
+
+        PathSearcher ps = new PathSearcher(m.tab);
+        //m.dc = new DrawCircle(m.tab, 900, 750, ps);
+
+        Sommet sm1 = m.tab.get(0).getOrigin().getValue();
+        Sommet sm2 = m.tab.get(9).getOrigin().getValue();
+
+        System.out.println("Qui ? - " + sm1.getName() + " " + sm2.getName());
+        System.out.println(ps.mostOpen(sm1, sm2, 2).getName());
+        
+
     }
     public void afficherSommets(){
         for(int i = 0; i < this.tab.size(); i++){
+            System.out.print(this.tab.get(i).getOrigin().getValue().getName() + " : ");
+            System.out.print(this.tab.get(i).getOrigin().getValue().getStringType());
             Cell cl = this.tab.get(i).getOrigin().getSuivant();
             for(int j = 0; j < this.tab.get(i).lenghtList()-1; j++){
+                System.out.print(" -> (" + cl.getRoute().getTypeStr() + " de " 
+                    + cl.getRoute().getKm() + "km) " + cl.getValue().getName());
                 cl = cl.getSuivant();
             }
+            System.out.println("");
         }
     }
+
 
     public void remplir() throws Exception {
         //lect = new Lecteur("data.txt");
@@ -418,3 +427,4 @@ public class Main {
         }
     }
 }
+
