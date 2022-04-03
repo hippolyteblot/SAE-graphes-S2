@@ -11,7 +11,7 @@ public class Main {
     DrawCircle dc;
     
     Main() throws Exception {
-        lect = new Lecteur("data.txt");
+        lect = new Lecteur("test.txt");
         
     }
     public static void main(String []args) throws Exception {
