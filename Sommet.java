@@ -6,6 +6,9 @@ public class Sommet {
     private int X;
     private int Y;
 
+    private double locX;
+    private double locY;
+
     Sommet(){
         this.name = null;
         this.type = 0; 
@@ -13,6 +16,12 @@ public class Sommet {
     Sommet(String name, int type){
         this.name = name;
         this.type = type;
+    }
+    Sommet(String name, int type, double locX, double locY){
+        this.name = name;
+        this.type = type;
+        this.locX = locX;
+        this.locY = locY;
     }
     // Getters
     public String getName(){
@@ -27,6 +36,23 @@ public class Sommet {
     public int getY() {
         return this.Y;
     }
+
+    public double getLocX() {
+        return this.locX;
+    }
+
+    public void setLocX(double locX) {
+        this.locX = locX;
+    }
+
+    public double getLocY() {
+        return this.locY;
+    }
+
+    public void setLocY(double locY) {
+        this.locY = locY;
+    }
+    
     public String getStringType(){
         if(this.type == 0) return "ville";
         else if(this.type == 1) return "restaurant";
