@@ -1,8 +1,8 @@
-V,Lyon:A,50::V,Tarare;A,70::V,St Etienne;A,100::V,Valence;D,5::V,Villeurbane;D,10::V,Bron;A,30::V,Villefranche-sur-Saone;D,5::L,Parc Tete d'or;;
-V,Roanne:N,40::V,Tarare;N,50::V,Feurs;N,50::V,Vichy;D,40::V,Thiers;D,5::R,Troisgros;;
-V,Tarare:A,50::V,Lyon;D,30::V,Feurs;N,40::V,Roanne;;
-V,Villeurbane:D,5::V,Lyon;D,10::V,Bron;A,60::V,Bourg-en-Bresse;A,60::V,Chambery;D,5::R,Brasserie George;D,5::L,Parc Tete d'or;D,5::L,Musee des Confluence;;
-V,Monbrison:D,30::V,St Etienne;D,20::V,Feurs;;
+V,Lyon,45.7678, 4.8351:A,50::V,Tarare;A,70::V,St Etienne;A,100::V,Valence;D,5::V,Villeurbane;D,10::V,Bron;A,30::V,Villefranche-sur-Saone;D,5::L,Parc Tete d'or;;
+V,Roanne,46.0343,4.0727:N,40::V,Tarare;N,50::V,Feurs;N,50::V,Vichy;D,40::V,Thiers;D,5::R,Troisgros;;
+V,Tarare,45.8952,4.4337:A,50::V,Lyon;D,30::V,Feurs;N,40::V,Roanne;;
+V,Villeurbane,45.7665,4.8795:D,5::V,Lyon;D,10::V,Bron;A,60::V,Bourg-en-Bresse;A,60::V,Chambery;D,5::R,Brasserie George;D,5::L,Parc Tete d'or;D,5::L,Musee des Confluence;;
+V,Monbrison,45.6074,4.0630:D,30::V,St Etienne;D,20::V,Feurs;;
 V,Bron:D,10::V,Lyon;D,10::V,Villeurbane;A,70::V,Grenoble;D,5::R,Brasserie George;D,10::L,Musee des Confluence;;
 V,Macon:A,40::V,Villefranche-sur-Saone;A,30::V,Bourg-en-Bresse;D,5::R,La Fabuleuse Cantine;N,90::L,Le Pal;;
 V,St Etienne:D,30::V,Monbrison;A,70::V,Lyon;D,80::V,Valence;D,50::V,Feurs;D,5::R,La Fabuleuse Cantine;;
