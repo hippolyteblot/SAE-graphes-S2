@@ -2,12 +2,8 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -51,6 +47,9 @@ public class Map extends JPanel implements MouseListener {
 
         g2d = (Graphics2D) g;
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON); 
+
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, width, height);
         
@@ -73,6 +72,12 @@ public class Map extends JPanel implements MouseListener {
                 50, 50);
         }
         setVisible(true);
+    }
+
+    public void preparePainting(){
+
+        int i = ps.indexSm(tmp1);
+        paintLink(this.tab.get(i), i, true, 0);
     }
 
     public void paintLink(Liste ls, int indice2, boolean exception, int TTL){
@@ -205,7 +210,8 @@ public class Map extends JPanel implements MouseListener {
                 g2d.setColor(Color.cyan);
                 g2d.drawOval(this.tab.get(i).getOrigin().getValue().getX()-2, 
                     this.tab.get(i).getOrigin().getValue().getY()-2, 50+4, 50+4);
-                paintLink(this.tab.get(i), i, true, 0);
+                tmp1 = this.tab.get(i).getOrigin().getValue();
+                //paintLink(this.tab.get(i), i, true, 0);
             }
         }
     }

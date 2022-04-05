@@ -49,7 +49,7 @@ public class DrawCircle extends JFrame {
         this.ps = ps;
         map = new Map(1400, 800, tab);
         smViewer = new SmViewer(width-1400, height, tab);
-        actionChoice = new ActionChoice(width-(width-1400), height-800);
+        actionChoice = new ActionChoice(width-(width-1400), height-800, map);
 
         
         
@@ -64,7 +64,7 @@ public class DrawCircle extends JFrame {
         setPosSm();
         setTitle("Graphe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //addResizeEvent();
+        addResizeEvent();
 
         contentPane.setSize(width, height);
         contentPane.setLayout(new BorderLayout());
@@ -148,12 +148,12 @@ public class DrawCircle extends JFrame {
                 maxY = tmp;
             }
         }
-
-        
+        maxX *= 1.1;
+        maxY *= 1.2;
         for(int i = 0; i < tab.size(); i++){
-            tab.get(i).getOrigin().getValue().setLocX((tab.get(i).getOrigin().getValue().getLocX()/maxX)*500);
-            tab.get(i).getOrigin().getValue().setLocY((tab.get(i).getOrigin().getValue().getLocY()/maxY)*500);
-            
+            System.out.println(tab.get(i).getOrigin().getValue().getLocY()/maxY);
+            tab.get(i).getOrigin().getValue().setLocX((tab.get(i).getOrigin().getValue().getLocX()/maxX)*1400);
+            tab.get(i).getOrigin().getValue().setLocY((tab.get(i).getOrigin().getValue().getLocY()/maxY)*600);
         }
         for(int i = 0; i < tab.size(); i++){
             tab.get(i).getOrigin().getValue().setX((int)(tab.get(i).getOrigin().getValue().getLocX()));

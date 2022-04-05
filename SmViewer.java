@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -37,6 +38,8 @@ public class SmViewer extends JPanel {
         this.tab = tab;
         this.width = width;
         this.height = height;
+        JLabel jl = new JLabel("Rehcercher un lieu");
+        add(jl);
         setPreferredSize(new Dimension(width, height));
         setVisible(true);
     }
@@ -44,11 +47,12 @@ public class SmViewer extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
-
+/*
         g2d = (Graphics2D) g;
 
         g2d.setColor(Color.red);
         g2d.fillRect(0, 0, width, height);
         setVisible(true);
+        */
     }
 }

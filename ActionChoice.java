@@ -1,6 +1,8 @@
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ActionChoice extends JPanel {
     
@@ -16,14 +18,17 @@ public class ActionChoice extends JPanel {
     JButton addRoad = new JButton("Add road");
     JButton removeRoad = new JButton("Remove road");
 
+    Map map;
+
     public ActionChoice() {
 
     }
 
-    public ActionChoice(int width, int height) {
+    public ActionChoice(int width, int height, Map map) {
 
         this.width = width;
         this.height = height;
+        this.map = map;
 
         setLayout(new GridLayout(2, 4));
 
@@ -35,6 +40,7 @@ public class ActionChoice extends JPanel {
         add(addRoad);
         add(removeRoad);
 
+        addBtnEvent();
 
         setPreferredSize(new Dimension(width, height));
         setVisible(true);
@@ -43,5 +49,24 @@ public class ActionChoice extends JPanel {
     
     @Override
     protected void paintComponent(Graphics g) {
+
+    }
+
+    public void addBtnEvent(){
+
+        neighbors.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                map.preparePainting();
+                System.out.print("test");
+            }
+        });
+        shortestPath.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                map.preparePainting();
+                System.out.print("test");
+            }
+        });
     }
 }
