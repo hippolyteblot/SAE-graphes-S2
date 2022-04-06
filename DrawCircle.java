@@ -1,6 +1,7 @@
-import java.awt.BasicStroke;
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,8 +15,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.awt.geom.AffineTransform;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 public class DrawCircle extends JFrame {
@@ -69,11 +71,21 @@ public class DrawCircle extends JFrame {
         contentPane.setSize(width, height);
         contentPane.setLayout(new BorderLayout());
 
-        contentPane.add(map, BorderLayout.CENTER);
+        //contentPane.add(map, BorderLayout.CENTER);
         
-        contentPane.add(smViewer, BorderLayout.EAST);
+        //contentPane.add(smViewer, BorderLayout.EAST);
+        map.setPreferredSize(new Dimension(1400, 600));
+        map.setSize(new Dimension(1400, 600));
 
-        contentPane.add(actionChoice, BorderLayout.SOUTH);
+        //contentPane.add(actionChoice, BorderLayout.SOUTH);
+        JSplitPane spliterVertical = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, map, smViewer);
+        spliterVertical.setDividerLocation(0.5);
+        spliterVertical.setResizeWeight(0.85);
+        //contentPane.add(spliterVertical);
+        JSplitPane spliter2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, spliterVertical, actionChoice);
+        spliter2.setDividerLocation(0.5);
+        spliter2.setResizeWeight(0.9);
+        contentPane.add(spliter2);
         //contentPane.add(map);
         //contentPane.add(smViewer);
 
