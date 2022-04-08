@@ -223,6 +223,7 @@ public class Main {
         writer.close();
         entre.close();
     }
+
     public void supprimerSommet() throws Exception{
         Scanner entre = new Scanner(System.in);
         ArrayList<String> lieux = new ArrayList<String>();

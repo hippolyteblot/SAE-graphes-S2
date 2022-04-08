@@ -19,16 +19,18 @@ public class ActionChoice extends JPanel {
     JButton removeRoad = new JButton("Remove road");
 
     Map map;
+    SmViewer smViewer;
 
     public ActionChoice() {
 
     }
 
-    public ActionChoice(int width, int height, Map map) {
+    public ActionChoice(int width, int height, Map map, SmViewer smViewer) {
 
         this.width = width;
         this.height = height;
         this.map = map;
+        this.smViewer = smViewer;
 
         setLayout(new GridLayout(2, 4));
 
@@ -57,15 +59,18 @@ public class ActionChoice extends JPanel {
         neighbors.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                map.preparePainting();
-                System.out.print("test");
+                if(map.tmp1 != null && map.tmp2 != null){
+                    map.paintComponent(map.getGraphics());
+                    map.preparePainting();
+                    smViewer.neighborsMod();
+                }
+                
             }
         });
         shortestPath.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 map.preparePainting();
-                System.out.print("test");
             }
         });
     }

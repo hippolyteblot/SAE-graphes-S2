@@ -1,24 +1,7 @@
-import java.awt.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseListener;
-import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.awt.geom.AffineTransform;
-
 import javax.swing.*;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class DrawCircle extends JFrame {
 
@@ -26,11 +9,9 @@ public class DrawCircle extends JFrame {
     private int width;
     private int height;
 
-    private Graphics g;
     private Graphics2D g2d;
 
     Color backgroundColor = new Color(30,30,30);
-    Timer timer;
     JTextField yourInpuFieldt;
     JTextField yourInpuFieldt2;
 
@@ -50,17 +31,8 @@ public class DrawCircle extends JFrame {
         this.tab = tab;
         this.ps = ps;
         map = new Map(1400, 800, tab);
-        smViewer = new SmViewer(width-1400, height, tab);
-        actionChoice = new ActionChoice(width-(width-1400), height-800, map);
-
-        
-        
-        //contentPane.add(map);
-        //add(contentPane);
-        //contentPane.setVisible(true);
-        //setContentPane(contentPane);
-
-        //smViewer.setLocation(1400, 0);
+        smViewer = new SmViewer(width-1400, height, tab, map);
+        actionChoice = new ActionChoice(width-(width-1400), height-800, map, smViewer);
         
         setSize(this.width, this.height);
         setPosSm();
@@ -77,63 +49,19 @@ public class DrawCircle extends JFrame {
         map.setPreferredSize(new Dimension(1400, 600));
         map.setSize(new Dimension(1400, 600));
 
-        //contentPane.add(actionChoice, BorderLayout.SOUTH);
-        JSplitPane spliterVertical = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, map, smViewer);
+        JScrollPane jsp = new JScrollPane(map);
+
+        JSplitPane spliterVertical = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jsp, smViewer);
         spliterVertical.setDividerLocation(0.5);
         spliterVertical.setResizeWeight(0.85);
-        //contentPane.add(spliterVertical);
         JSplitPane spliter2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, spliterVertical, actionChoice);
         spliter2.setDividerLocation(0.5);
         spliter2.setResizeWeight(0.9);
         contentPane.add(spliter2);
-        //contentPane.add(map);
-        //contentPane.add(smViewer);
 
         add(contentPane);
 
         setVisible(true);
-    }
-
-    public void update() {
-        update(this.getGraphics());
-    }
-/*
-    @Override
-    public void paint(Graphics g) {
-    }*/
-
-    public void realPaint(){
-
-        this.g = contentPane.getGraphics();
-        this.g2d = (Graphics2D) this.g;
-        
-        setLayout(new FlowLayout());
-        setVisible(true);
-        
-        contentPane.setLayout(null);
-        contentPane.setSize(width, height);
-        contentPane.setVisible(true);
-        //setLocationRelativeTo(null);
-        
-
-        g2d.setStroke(new BasicStroke(2));
-
-        for(int i = 0; i < this.tab.size(); i++){
-
-            g2d.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));   
-            Ellipse2D.Double circle = new Ellipse2D.Double(tab.get(i).getOrigin().getValue().getX(), 
-                tab.get(i).getOrigin().getValue().getY(), 
-                50, 50);
-            g2d.fill(circle);
-            g2d.setColor(this.getSommetColor(this.tab.get(i).getOrigin()));
-
-
-            paintLink(this.tab.get(i), i, false, 0);
-            
-            g2d.drawOval(tab.get(i).getOrigin().getValue().getX(), 
-                tab.get(i).getOrigin().getValue().getY(),
-                50, 50);
-        }
     }
 
     public void setPosSm(){
@@ -294,7 +222,7 @@ public class DrawCircle extends JFrame {
     public void addResizeEvent(){
         addComponentListener((ComponentListener) new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
-                update();
+                update(getGraphics());
                 Rectangle r = getBounds();
                 setWidth(r.width);
                 setHeight(r.height);

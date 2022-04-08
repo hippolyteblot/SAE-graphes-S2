@@ -1,25 +1,6 @@
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseListener;
-import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.awt.geom.AffineTransform;
-import javax.swing.JPanel;
 import java.awt.*;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import java.util.*;
+import javax.swing.*;
 
 
 public class SmViewer extends JPanel {
@@ -28,17 +9,20 @@ public class SmViewer extends JPanel {
     int height;
     ArrayList<Liste> tab;
     Graphics2D g2d;
+    JLabel jl;
+    Map map;
 
     public SmViewer() {
 
     }
 
-    public SmViewer(int width, int height, ArrayList<Liste> tab) {
+    public SmViewer(int width, int height, ArrayList<Liste> tab, Map map) {
 
         this.tab = tab;
         this.width = width;
         this.height = height;
-        JLabel jl = new JLabel("Rehcercher un lieu");
+        this.map = map;
+        jl = new JLabel("Rehcercher un lieu");
         add(jl);
         setPreferredSize(new Dimension(width, height));
         setVisible(true);
@@ -54,5 +38,12 @@ public class SmViewer extends JPanel {
         g2d.fillRect(0, 0, width, height);
         setVisible(true);
         */
+    }
+
+    public void neighborsMod(){
+
+        jl.setText("Voisins de " + map.getTmp1().getName());
+        JTextField distance = new JTextField();
+        add(distance);
     }
 }

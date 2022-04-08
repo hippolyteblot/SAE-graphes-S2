@@ -1,18 +1,8 @@
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.util.*;
 import java.awt.*;
-import java.awt.Graphics2D;
-import java.awt.event.MouseListener;
-import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.awt.geom.AffineTransform;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.event.*;
+import java.awt.geom.*;
 
 
 public class Map extends JPanel implements MouseListener {
@@ -25,6 +15,10 @@ public class Map extends JPanel implements MouseListener {
     Sommet tmp1;
     Sommet tmp2;
     JPanel interactionPanel;
+    JButton zoomIn = new JButton("+");
+    JButton zoomOut = new JButton("-");
+    JScrollBar scrollVertical = new JScrollBar();
+    Double zoom = 1.0;
 
     public Map() {
 
@@ -35,10 +29,33 @@ public class Map extends JPanel implements MouseListener {
         this.tab = tab;
         this.width = width;
         this.height = height;
+
+        // Zoom in event
+        zoomIn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                zoomIn();
+                paintComponent(getGraphics());
+            }
+        });
+        // Zoom out event
+        zoomOut.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                zoomOut();
+                paintComponent(getGraphics());
+            }
+        });
+    
+        add(zoomIn);
+        add(zoomOut);
+        add(scrollVertical);
         setPreferredSize(new Dimension(width, height));
         setSize(width, height);
         addMouseListener(this);
         setVisible(true);
+        
+        
         ps = new PathSearcher(tab);
     }
 
@@ -47,12 +64,16 @@ public class Map extends JPanel implements MouseListener {
 
         g2d = (Graphics2D) g;
 
+        AffineTransform tr2 = new AffineTransform(g2d.getTransform());
+        tr2.scale(zoom,zoom);
+        g2d.setTransform(tr2);
+        
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON); 
 
         g2d.setColor(new Color(238,238,238));
         g2d.fillRect(0, 0, width, height);
-        
         setLayout(null);
         g2d.setStroke(new BasicStroke(2));
 
@@ -71,7 +92,6 @@ public class Map extends JPanel implements MouseListener {
                 tab.get(i).getOrigin().getValue().getY(),
                 50, 50);
         }
-        setVisible(true);
     }
 
     public void preparePainting(){
@@ -82,40 +102,42 @@ public class Map extends JPanel implements MouseListener {
 
     public void paintLink(Liste ls, int indice2, boolean exception, int TTL){
 
-        int length = ls.lenghtList();
-        Cell actuel = ls.getOrigin().getSuivant();
-        //Graphics2D g2d = (Graphics2D) interactionPanel.getGraphics();
-
-        for(int i = 1; i < length; i++){
-            
-            int indice = findSm(actuel.getValue().getName());
-
-            Cell cl = tab.get(indice).getOrigin();
-            if(exception){
-                g2d.setStroke(new BasicStroke(7));
-                g2d.setColor(Color.cyan);
+        if(ls != null){
+            int length = ls.lenghtList();
+            Cell actuel = ls.getOrigin().getSuivant();
+    
+            for(int i = 1; i < length; i++){
+                
+                int indice = findSm(actuel.getValue().getName());
+    
+                Cell cl = tab.get(indice).getOrigin();
+                if(exception){
+                    g2d.setStroke(new BasicStroke(7));
+                    g2d.setColor(Color.cyan);
+                    g2d.drawLine(
+                        tab.get(indice2).getOrigin().getValue().getX()+25, // x1
+                        tab.get(indice2).getOrigin().getValue().getY()+25, // y1
+                        cl.getValue().getX()+25, // x2
+                        cl.getValue().getY()+25 // y2
+                        );
+                    g2d.drawOval(cl.getValue().getX()-2, 
+                        cl.getValue().getY()-2, 50+4, 50+4);
+                    if(TTL > 0)
+                        paintLink(tab.get(indice), indice, exception, TTL-1);
+                }
+                g2d.setStroke(new BasicStroke(2));
+                g2d.setColor(getRoadColor(actuel)); 
                 g2d.drawLine(
                     tab.get(indice2).getOrigin().getValue().getX()+25, // x1
                     tab.get(indice2).getOrigin().getValue().getY()+25, // y1
                     cl.getValue().getX()+25, // x2
                     cl.getValue().getY()+25 // y2
                     );
-                g2d.drawOval(cl.getValue().getX()-2, 
-                    cl.getValue().getY()-2, 50+4, 50+4);
-                if(TTL > 0)
-                    paintLink(tab.get(indice), indice, exception, TTL-1);
+                actuel = actuel.getSuivant();
             }
-            g2d.setStroke(new BasicStroke(2));
-            g2d.setColor(getRoadColor(actuel)); 
-            g2d.drawLine(
-                tab.get(indice2).getOrigin().getValue().getX()+25, // x1
-                tab.get(indice2).getOrigin().getValue().getY()+25, // y1
-                cl.getValue().getX()+25, // x2
-                cl.getValue().getY()+25 // y2
-                );
-            actuel = actuel.getSuivant();
+            g2d.setStroke(new BasicStroke(3));
         }
-        g2d.setStroke(new BasicStroke(3));
+        
     }
 
 
@@ -151,6 +173,7 @@ public class Map extends JPanel implements MouseListener {
         }
         return color;
     }
+
     public Color getSommetColor(Cell cl){
         Color color = new Color(0,0,0);
         switch(cl.getValue().getType()){
@@ -166,10 +189,19 @@ public class Map extends JPanel implements MouseListener {
         }
         return color;
     }
+
+    public void zoomIn(){
+
+        zoom = zoom + 0.1;
+    }
+    public void zoomOut(){
+
+        zoom = zoom - 0.1;
+    }
     
     public boolean checkSmArea(int x, int y, Sommet sm){
 
-        if(sm.getX() >= x-50 &&sm.getY() > y-50 && sm.getX() < x && sm.getY() < y){
+        if(sm.getX()*zoom >= x-50*zoom &&sm.getY()*zoom > y-50*zoom && sm.getX()*zoom < x && sm.getY()*zoom < y){
             return true;
         }
         return false;
@@ -219,6 +251,8 @@ public class Map extends JPanel implements MouseListener {
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
 
+        tmp1 = null;
+        tmp2 = null;
         int x = e.getX();
         int y = e.getY();
         g2d = (Graphics2D) getGraphics();
@@ -255,21 +289,25 @@ public class Map extends JPanel implements MouseListener {
                 break;
             }
         }
-        ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
 
-        System.out.println();
-        for(int i = 0; i < ls.size()-1; i++){
-            Sommet sm1 = ps.findSmByString(ls.get(i));
-            Sommet sm2 = ps.findSmByString(ls.get(i+1));
-            g2d.setColor(Color.red);
-            g2d.setStroke(new BasicStroke(4));
-            paintSpecificLink(sm1, sm2);
-            if(i == 0)
-                System.out.print(ls.get(i));
-            else
-                System.out.print(" -> " + ls.get(i));
+        if(tmp1 != null && tmp2 != null){
+            ArrayList<String> ls =  ps.dijkstra(tmp1, tmp2);
+
+            System.out.println();
+            for(int i = 0; i < ls.size()-1; i++){
+                Sommet sm1 = ps.findSmByString(ls.get(i));
+                Sommet sm2 = ps.findSmByString(ls.get(i+1));
+                g2d.setColor(Color.red);
+                g2d.setStroke(new BasicStroke(4));
+                paintSpecificLink(sm1, sm2);
+                if(i == 0)
+                    System.out.print(ls.get(i));
+                else
+                    System.out.print(" -> " + ls.get(i));
+            }
+            System.out.println(" -> " + tmp2.getName());
         }
-        System.out.println(" -> " + tmp2.getName());
+
     }
     
 
@@ -283,5 +321,10 @@ public class Map extends JPanel implements MouseListener {
     public void mouseExited(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         
+    }
+
+
+    public Sommet getTmp1(){
+        return tmp1;
     }
 }
