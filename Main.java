@@ -7,7 +7,7 @@ public class Main {
     DrawCircle dc;
     
     Main() throws Exception {
-        lect = new Lecteur("test.txt");
+        lect = new Lecteur("data.txt");
         
     }
     public static void main(String []args) throws Exception {
@@ -16,8 +16,8 @@ public class Main {
         m.remplir();
         //m.findEquivalence();
         //m.afficherSommets();
-        Updater updater = new Updater(m.tab);
-        updater.ajoutSommet();
+        /*Updater updater = new Updater(m.tab);
+        updater.ajoutSommet();*/
 
         PathSearcher ps = new PathSearcher(m.tab);
         m.dc = new DrawCircle(m.tab, 1800, 900, ps);
@@ -39,7 +39,7 @@ public class Main {
 
 
     public void remplir() throws Exception {
-         lect = new Lecteur("test.txt");
+         lect = new Lecteur("data.txt");
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
