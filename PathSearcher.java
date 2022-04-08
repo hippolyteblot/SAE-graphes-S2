@@ -30,41 +30,41 @@ public class PathSearcher {
         }
    
     }
-    public Sommet nodeWithMinimalDistance(Map<String,Double> distances, ArrayList<Sommet> remaining) {
-        Sommet minimalNode = remaining.get(0);
-        Double minimalDistance = distances.get(minimalNode.getName());
-        for (Sommet node : remaining) {
-            if  (distances.get(node.getName()) < minimalDistance) {
-                minimalNode = node;
-                minimalDistance = distances.get(node.getName());
+    public Sommet CellWithMinimalDistance(Map<String,Double> distances, ArrayList<Sommet> restant) {
+        Sommet lowerCell = restant.get(0);
+        Double lowerDistance = distances.get(lowerCell.getName());
+        for (Sommet node : restant) {
+            if  (distances.get(node.getName()) < lowerDistance) {
+                lowerCell = node;
+                lowerDistance = distances.get(node.getName());
             }
         }
-        return minimalNode;
+        return lowerCell;
     }
 
     public ArrayList<String> dijkstra(Sommet StartSm, Sommet EndSm){
 
         ArrayList<String> path = new ArrayList<>();
-        ArrayList<Sommet> remaining = new ArrayList<Sommet>();
+        ArrayList<Sommet> restant = new ArrayList<Sommet>();
         for(int i = 0; i < tab.size(); i++){
-            remaining.add(tab.get(i).getOrigin().getValue());
+            restant.add(tab.get(i).getOrigin().getValue());
         }
         Map<String,Double> distance = new HashMap<>();
-        Map<String,String> previous = new HashMap<>();
+        Map<String,String> precedent = new HashMap<>();
         Sommet minimalNode;
         String actuel;
         initializeDistances(distance, StartSm);
-        previous.put(StartSm.getName(), null);
+        precedent.put(StartSm.getName(), null);
 
-        while (!remaining.isEmpty()){
-            minimalNode = nodeWithMinimalDistance(distance, remaining);
+        while (!restant.isEmpty()){
+            minimalNode = CellWithMinimalDistance(distance, restant);
             
-            remaining.remove(tab.get(indexSm2(minimalNode)).getOrigin().getValue());
-            Cell tmp = tab.get(indexSm2(minimalNode)).getOrigin();
+            restant.remove(tab.get(indexSm(minimalNode)).getOrigin().getValue());
+            Cell tmp = tab.get(indexSm(minimalNode)).getOrigin();
             
 
-            for(int i = 0; i < tab.get(indexSm2(minimalNode)).lenghtList(); i++){
-                release(distance, previous, minimalNode, tmp);
+            for(int i = 0; i < tab.get(indexSm(minimalNode)).lenghtList(); i++){
+                release(distance, precedent, minimalNode, tmp);
                 tmp = tmp.getSuivant();
             }
         }
@@ -74,26 +74,16 @@ public class PathSearcher {
             path.add(EndSm.getName());
             actuel = EndSm.getName();
             
-            while(previous.get(actuel) != null){
-                path.add(0, previous.get(actuel));
-                actuel = previous.get(actuel);
+            while(precedent.get(actuel) != null){
+                path.add(0, precedent.get(actuel));
+                actuel = precedent.get(actuel);
             }
         }
         
         return path;
     }
 
-    public int indexSm(Sommet sm, ArrayList<Sommet> remaining){
-
-        int index = 0;
-        for(int i = 0; i < remaining.size(); i++){
-            if(sm.getName().equals(remaining.get(i).getName()))
-                index = i;
-        }
-        return index;
-    }
-
-    public int indexSm2(Sommet sm){
+    public int indexSm(Sommet sm){
 
         int index = 0;
         for(int i = 0; i < tab.size(); i++){
@@ -119,7 +109,7 @@ public class PathSearcher {
         ArrayList<String> alreadyCheck = new ArrayList<String>();
         int[] counter = {0,0};
 
-        Liste[] ls = {tab.get(indexSm2(sm1)),tab.get(indexSm2(sm2))};
+        Liste[] ls = {tab.get(indexSm(sm1)),tab.get(indexSm(sm2))};
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < ls[i].lenghtList(); j++){
                 if(ls[i].getACell(j).getValue().getType() == mode &&
@@ -127,7 +117,7 @@ public class PathSearcher {
                     alreadyCheck.add((ls[i].getACell(j).getValue().getName()));
                     counter[i]++;
                 }
-                Liste liste = tab.get(indexSm2(ls[i].getACell(j).getValue()));
+                Liste liste = tab.get(indexSm(ls[i].getACell(j).getValue()));
                 for(int k = 0; k < liste.lenghtList(); k++){
                     if(liste.getACell(k).getValue().getType() == mode &&
                         !alreadyCheck.contains(liste.getACell(k).getValue().getName())){

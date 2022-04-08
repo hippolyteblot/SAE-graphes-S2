@@ -7,7 +7,7 @@ public class Main {
     DrawCircle dc;
     
     Main() throws Exception {
-        lect = new Lecteur("data.txt");
+        lect = new Lecteur("test.txt");
         
     }
     public static void main(String []args) throws Exception {
@@ -20,14 +20,7 @@ public class Main {
         updater.ajoutSommet();
 
         PathSearcher ps = new PathSearcher(m.tab);
-        m.dc = new DrawCircle(m.tab, 900, 750, ps);
-
-        Sommet sm1 = m.tab.get(0).getOrigin().getValue();
-        Sommet sm2 = m.tab.get(9).getOrigin().getValue();
-
-        System.out.println("Qui ? - " + sm1.getName() + " " + sm2.getName());
-        System.out.println(ps.mostOpen(sm1, sm2, 2).getName());
-        
+        m.dc = new DrawCircle(m.tab, 1800, 900, ps);
 
     }
     public void afficherSommets(){
@@ -46,18 +39,20 @@ public class Main {
 
 
     public void remplir() throws Exception {
-         lect = new Lecteur("data.txt");
+         lect = new Lecteur("test.txt");
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
             line = line.replace(" ", "");
-            String part1 = line.split(":[A-Z]|;|:")[0];
-            String part2 = line.split("[a-z]:")[1];
+            String part1 = line.split(":[0-9]|;|:")[0]; // ici pour la localisation
+            String part2 = line.split(":;")[1];
 
             String type = part1.split(",[A-Z]")[0];
-            String nom = part1.split("[A-Z],")[1];
+            String nom = part1.split(",")[1];
+            Double[] pos = {Double.valueOf(part1.split(",")[2]), Double.valueOf(part1.split(",")[3])};
+
             int typeS = findTypeSm(type);
-            Sommet sm = new Sommet(nom, typeS);
+            Sommet sm = new Sommet(nom, typeS, pos[0], pos[1]);
             Cell linkTab[] = readLink(part2);
 
             this.tab.add(new Liste(new Cell(sm)));
@@ -121,6 +116,7 @@ public class Main {
         }
         return linkTabCl;
     }
+    
     public void findEquivalence(){
 
         for(int i = 0; i < this.tab.size(); i++){
