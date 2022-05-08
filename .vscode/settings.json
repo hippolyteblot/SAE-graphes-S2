@@ -1,0 +1,15 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "flatlaf-2.1.jar"
+        ],
+        "exclude": [
+            "lib/flatlaf-2.1.jar"
+        ]
+    },
+    "java.project.sourcePaths": [
+        ".",
+        "lib"
+    ]
+}
