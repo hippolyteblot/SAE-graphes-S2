@@ -1,7 +1,9 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PathFinder {
     
@@ -84,24 +86,24 @@ public class PathFinder {
 
 
     // Retourne la ville la plus ouverte à 2 de distances en fonction du mode (0 = ville, 1 = restaurant, ...)
-    public Sommet mostOpen(Sommet sm1, Sommet sm2, int mode){
+    public Sommet mostOpen(Sommet sm1, Sommet sm2, NodeList.NodeType mode){
 
-        ArrayList<String> alreadyCheck = new ArrayList<String>();
+        ArrayList<Sommet> alreadyCheck = new ArrayList<Sommet>();
         int[] counter = {0,0};
 
         NeighborsList[] ls = {tab.get(tab.getNodeIndex(sm1)),tab.get(tab.getNodeIndex(sm2))};
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < ls[i].size(); j++){
                 if(ls[i].get(j).getValue().getType() == mode &&
-                    !alreadyCheck.contains(ls[i].get(j).getValue().getName())){
-                    alreadyCheck.add((ls[i].get(j).getValue().getName()));
+                    !alreadyCheck.contains(ls[i].get(j).getValue())){
+                    alreadyCheck.add((ls[i].get(j).getValue()));
                     counter[i]++;
                 }
                 NeighborsList liste = tab.get(tab.getNodeIndex(ls[i].get(j).getValue()));
                 for(int k = 0; k < liste.size(); k++){
                     if(liste.get(k).getValue().getType() == mode &&
-                        !alreadyCheck.contains(liste.get(k).getValue().getName())){
-                        alreadyCheck.add((liste.get(k).getValue().getName()));
+                        !alreadyCheck.contains(liste.get(k).getValue())){
+                        alreadyCheck.add((liste.get(k).getValue()));
                         counter[i]++;
                     }
                 }
@@ -113,5 +115,72 @@ public class PathFinder {
         else if(counter[1] > counter[0])
             return sm2;
         return new Sommet();
+    }
+    public Road getRoad(Sommet sm1, Sommet sm2){
+        NeighborsList list = tab.get(tab.getNodeIndex(sm1));
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getValue().equals(sm2))
+                return list.get(i).getRoute();
+        }
+        return null;
+    }
+
+    public int getDistance(Sommet sm1, Sommet sm2){
+        ArrayList<Sommet> chemin = dijkstra(sm1, sm2);
+        int distance = 0;
+        for(int i = 0; i < chemin.size()-1; i++){
+            Road kmRoad = getRoad(chemin.get(i), chemin.get(i+1));
+            if(kmRoad != null)
+                distance += kmRoad.getKm();
+            else
+                distance += 999999;
+        }
+        return distance;
+    }
+
+    public ArrayList<Sommet> getNeighbors(Sommet sm, int TTL){
+        TTL--;
+        ArrayList<Sommet> neighbors = new ArrayList<>();
+        NeighborsList list = tab.get(tab.getNodeIndex(sm));
+        for(int i = 0; i < list.size(); i++){
+            if(!neighbors.contains(list.get(i).getValue()))
+                neighbors.add(list.get(i).getValue());
+            if(TTL > 0){
+                neighbors.addAll(getNeighbors(list.get(i).getValue(), TTL));
+            }
+        }
+        LinkedHashSet<Sommet> set = neighbors.stream().collect(Collectors.toCollection(LinkedHashSet::new));
+        neighbors.clear();
+        neighbors.addAll(set);
+        return neighbors;
+    }
+
+    public Sommet getCloserNode(Sommet start, Sommet end, NodeList.NodeType type){
+
+        Sommet closer = new Sommet();
+        ArrayList<Sommet> typeNodeStart = tab.getAllNodesOfType(type);
+        typeNodeStart.remove(start);
+        typeNodeStart.remove(end);
+        ArrayList<Sommet> typeNodeEnd = tab.getAllNodesOfType(type);
+        typeNodeEnd.remove(end);
+        typeNodeEnd.remove(start);
+        ArrayList<Integer> distanceFromStart = new ArrayList<>();
+        ArrayList<Integer> distanceFromEnd = new ArrayList<>();
+        for(Sommet sm : typeNodeStart){
+            distanceFromStart.add(getDistance(start, sm));
+        }
+        for(Sommet sm : typeNodeEnd){
+            distanceFromEnd.add(getDistance(end, sm));
+        }
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < typeNodeStart.size(); i++){
+            if(distanceFromStart.get(i) + distanceFromEnd.get(i) < min){
+                min = distanceFromStart.get(i) + distanceFromEnd.get(i);
+                closer = typeNodeStart.get(i);
+            }
+        }
+        System.out.println("Closer node : " + closer.getName());
+        return closer;
+
     }
 }

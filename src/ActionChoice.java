@@ -25,7 +25,7 @@ public class ActionChoice extends JPanel {
     JButton zoomOut = new JButton("-");
     JPanel zoomer = new JPanel();
     boolean showingIndication = false;
-    int indicationType = -1;
+    private int indicationType = -1;
 
     Map map;
     SmViewer smViewer;
@@ -82,6 +82,7 @@ public class ActionChoice extends JPanel {
                 repaint();
                 break;
             case 1:
+            case 2:
                 JLabel label2 = new JLabel("Select two locations");
                 label2.setFont(new Font("Segoe UI", Font.PLAIN, 34));
                 label2.setHorizontalAlignment(JLabel.CENTER);
@@ -94,6 +95,7 @@ public class ActionChoice extends JPanel {
                 break;
         }
     }
+
     public void hideIndication() {
         showingIndication = false;
         removeAll();
@@ -131,6 +133,12 @@ public class ActionChoice extends JPanel {
                 showIndication(1);
             }
         });
+        compare.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showIndication(2);
+            }
+        });
         manageData.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,6 +147,14 @@ public class ActionChoice extends JPanel {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+            }
+        });
+        addLocation.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                smViewer.infoAboutAction(3, 0);
+                frameManager.repaint();
+                System.out.println("add location");
             }
         });
                 // Zoom in event
@@ -164,7 +180,7 @@ public class ActionChoice extends JPanel {
     public boolean isShowingIndication() {
         return showingIndication;
     }
-    public int indicationType() {
+    public int getIndicationType() {
         return indicationType;
     }
     public void setIndicationType(int indicationType) {

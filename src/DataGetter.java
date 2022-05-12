@@ -52,7 +52,7 @@ public class DataGetter {
 
     public void writeJSONs(JSONArray jsonA, String type, int numberOfResults) throws IOException {
         String typeFound = sb.getTypeFound(type);
-        FileWriter file = new FileWriter("C:\\Users\\blapa\\Desktop\\Cours IUT\\Java\\test\\src\\data.csv", true);
+        FileWriter file = new FileWriter("src\\data.csv", true);
         if(jsonA.size() < numberOfResults) {numberOfResults = jsonA.size();}
         for(int i = 0; i < numberOfResults; i++) {
             JSONObject newObj = (JSONObject)jsonA.get(i);
@@ -67,7 +67,7 @@ public class DataGetter {
         file.close();
     }
     public void ereaseData() throws IOException {
-        FileWriter file = new FileWriter("C:\\Users\\blapa\\Desktop\\Cours IUT\\Java\\test\\src\\data.csv", false);
+        FileWriter file = new FileWriter("src\\data.csv", false);
         file.write("");
         file.flush();
         file.close();

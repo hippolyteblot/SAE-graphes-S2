@@ -70,10 +70,10 @@ public class Main {
 
             String type = part1.split(",[A-Z]")[0];
             String nom = part1.split(",")[1];
-            Double[] pos = {Double.valueOf(part1.split(",")[2]), Double.valueOf(part1.split(",")[3])};
+            Double[] pos = {Double.valueOf(part1.split((","))[2]), Double.valueOf(part1.split(",")[3])};
 
 
-            int typeS = findTypeSm(type);
+            NodeList.NodeType typeS = findTypeSm(type);
             Sommet sm = new Sommet(nom, typeS, pos[0], pos[1]);
             Cell linkTab[] = readLink(part2);
 
@@ -85,17 +85,20 @@ public class Main {
         }
     }
 
-    public int findTypeSm(String str){
-        int typeS;
+    public NodeList.NodeType findTypeSm(String str){
+        NodeList.NodeType typeS;
         switch(str){
             case "R":
-                typeS = 1;
+                typeS = NodeList.NodeType.RESTAURANT;
                 break;
             case "L":
-                typeS = 2;
+                typeS = NodeList.NodeType.LOISIR;
+                break;
+            case "S":
+                typeS = NodeList.NodeType.SERVICE;
                 break;
             default:
-                typeS = 0;
+                typeS = NodeList.NodeType.VILLE;
                 break;
         }
         return typeS;
@@ -165,6 +168,11 @@ public class Main {
         pb.syncronize();
         findEquivalence();
 
+        frame.reinit();
+    }
+
+    public void addSommet(Sommet sm){
+        tab.add(new NeighborsList(new Cell(sm)));
         frame.reinit();
     }
 

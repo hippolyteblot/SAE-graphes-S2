@@ -3,7 +3,7 @@ import java.net.URL;
 public class Sommet {
     
     private String name;
-    private int type; // 0 : ville, 1 : restaurant, 2 : loisir
+    private NodeList.NodeType type; // 0 : ville, 1 : restaurant, 2 : loisir
     private int X;
     private int Y;
 
@@ -13,13 +13,13 @@ public class Sommet {
 
     Sommet(){
         this.name = null;
-        this.type = 0; 
+        this.type = NodeList.NodeType.VILLE;
     }
-    Sommet(String name, int type){
+    Sommet(String name, NodeList.NodeType type){
         this.name = name;
         this.type = type;
     }
-    Sommet(String name, int type, double locX, double locY){
+    Sommet(String name, NodeList.NodeType type, double locX, double locY){
         this.name = name;
         this.type = type;
         this.locX = locX;
@@ -32,7 +32,7 @@ public class Sommet {
     public String getName(){
         return this.name;
     }
-    public int getType(){
+    public NodeList.NodeType getType(){
         return this.type;
     }
     public int getX() {
@@ -59,23 +59,25 @@ public class Sommet {
     }
     
     public String getStringType(){
-        if(this.type == 0) return "ville";
-        else if(this.type == 1) return "restaurant";
-        else if(this.type == 2) return "loisir";
+        if(this.type == NodeList.NodeType.VILLE) return "ville";
+        else if(this.type == NodeList.NodeType.RESTAURANT) return "restaurant";
+        else if(this.type == NodeList.NodeType.LOISIR) return "loisir";
+        else if(this.type == NodeList.NodeType.SERVICE) return "service";
         else return "erreur";
 
     }
     public char getCharType(){
-        if(this.type == 0) return 'V';
-        else if(this.type == 1) return 'R';
-        else if(this.type == 2) return 'L';
+        if(this.type == NodeList.NodeType.VILLE) return 'V';
+        else if(this.type == NodeList.NodeType.RESTAURANT) return 'R';
+        else if(this.type == NodeList.NodeType.LOISIR) return 'L';
+        else if(this.type == NodeList.NodeType.SERVICE) return 'S';
         else return 'E';
     }
     // Setters
     public void setName(String name){
         this.name = name;
     }
-    public void setType(int type){
+    public void setType(NodeList.NodeType type){
         this.type = type;
     }
     public void setX(int X) {

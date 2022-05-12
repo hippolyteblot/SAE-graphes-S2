@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Updater {
+public class Updater {/*
     NodeList tab;
 
     Updater(NodeList tab){
@@ -290,5 +290,5 @@ public class Updater {
         System.out.println("Suppression route");
         writer.close();
         entre.close();
-    } 
+    } */
 }

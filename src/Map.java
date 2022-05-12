@@ -18,15 +18,22 @@ public class Map extends JPanel implements MouseListener {
     Sommet clicked;
     Sommet tmp1 = null;
     Sommet tmp2 = null;
+    Sommet tmp3 = null;
     Double zoom = 1.0;
     SmViewer smViewer;
     boolean drawNeighbours = false;
     boolean drawPath = false;
+    boolean compare = false;
+    boolean drawSpecialPath = false;
+    FrameManager fm;
+    int drawNeighboursModified = 0;
 
 
-    public Map(int width, int height, NodeList tab){
+    public Map(int width, int height, NodeList tab, FrameManager fm) {
 
         this.tab = tab;
+        this.width = width;
+        this.fm = fm;
 
         this.width = width;
         this.height = height;
@@ -41,6 +48,16 @@ public class Map extends JPanel implements MouseListener {
         printPosition();
 
         pf = new PathFinder(tab);
+    }
+
+    public void drawName(Sommet sm, Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        int x = sm.getX();
+        int y = sm.getY();
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, (int) (18/zoom)));
+        //Create a font object with background color
+        g2d.drawString(sm.getName(), x-50, y);
     }
 
     public void printPosition(){
@@ -71,16 +88,45 @@ public class Map extends JPanel implements MouseListener {
         RenderingHints.VALUE_ANTIALIAS_ON);
 
         paintEverything(g);
-        if(clicked != null && drawNeighbours){
-            showNeighbours(clicked, 1, g);
-            drawNeighbours = false;
-            actionChoice.setIndicationType(-1);
-        } else if (drawPath){
-            drawPath(g);
-            drawPath = false;
-            actionChoice.setIndicationType(-1);
+
+        if(drawSpecialPath){
+            System.out.println("drawSpecialPath " + tmp1.getName() + " - " + tmp2.getName());
+            drawSpecialPath(g);
+            smViewer.infoAboutAction(1, 0);
             tmp1 = null;
             tmp2 = null;
+            tmp3 = null;
+            drawSpecialPath = false;
+        }
+
+        if(drawNeighboursModified > 0){
+            drawNeighbours = true;
+            showNeighbours(clicked, drawNeighboursModified, g);
+            smViewer.infoAboutAction(0, drawNeighboursModified);
+            drawNeighboursModified = 0;
+            drawNeighbours = false;
+        }
+        if(clicked != null && drawNeighbours){
+            showNeighbours(clicked, 1, g);
+
+            actionChoice.setIndicationType(-1);
+            smViewer.infoAboutAction(0, 1);
+            drawNeighbours = false;
+        } else if (drawPath) {
+            drawPath(g);
+
+            actionChoice.setIndicationType(-1);
+            smViewer.infoAboutAction(1, 0);
+            tmp1 = null;
+            tmp2 = null;
+            drawPath = false;
+        } else if (compare) {
+
+            actionChoice.setIndicationType(-1);
+            smViewer.infoAboutAction(2, 1);
+            tmp1 = null;
+            tmp2 = null;
+            compare = false;
         }
     }
 
@@ -120,6 +166,43 @@ public class Map extends JPanel implements MouseListener {
         }
         System.out.println(" -> " + tmp2.getName());
     }
+    public void drawSpecialPath(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        ArrayList<Sommet> ls =  pf.dijkstra(tmp1, tmp2);
+        System.out.println();
+        for(int i = 0; i < ls.size()-1; i++){
+            Sommet sm1 = ls.get(i);
+            Sommet sm2 = ls.get(i+1);
+
+            g2d.setColor(Color.red);
+            g2d.setStroke(new BasicStroke(4));
+
+            paintSpecificLink(sm1, sm2, g);
+            if(i == 0)
+                System.out.print(ls.get(i));
+            else
+                System.out.print(" -> " + ls.get(i));
+        }
+        System.out.println(" -> " + tmp2.getName());
+
+        ArrayList<Sommet> ls2 =  pf.dijkstra(tmp2, tmp3);
+        System.out.println();
+        for(int i = 0; i < ls2.size()-1; i++){
+            Sommet sm1 = ls2.get(i);
+            Sommet sm2 = ls2.get(i+1);
+
+            g2d.setColor(Color.red);
+            g2d.setStroke(new BasicStroke(4));
+
+            paintSpecificLink(sm1, sm2, g);
+            if(i == 0)
+                System.out.print(ls2.get(i));
+            else
+                System.out.print(" -> " + ls2.get(i));
+        }
+        System.out.println(" -> " + tmp2.getName());
+        ls.addAll(ls2);
+    }
 
 
     public void paintEverything(Graphics g){
@@ -136,6 +219,7 @@ public class Map extends JPanel implements MouseListener {
     public void paintAllEllipses(Graphics g){
         for(int i = 0; i < this.tab.size(); i++){
             paintEllipse(g, this.tab.getNode(i));
+            drawName(this.tab.getNode(i), g);
         }
     }
     public void paintSpecificLink(Sommet s1, Sommet s2, Graphics g){
@@ -203,9 +287,9 @@ public class Map extends JPanel implements MouseListener {
 
     public Color getRoadColor(Sommet sm){
         return switch (sm.getType()) {
-            case 1 -> new Color(100, 20, 100);
-            case 2 -> new Color(200, 20, 150);
-            case 3 -> new Color(150, 20, 200);
+            case VILLE -> new Color(100, 20, 100);
+            case RESTAURANT -> new Color(200, 20, 150);
+            case LOISIR -> new Color(150, 20, 200);
             default -> new Color(100, 20, 250);
         };
     }
@@ -213,8 +297,8 @@ public class Map extends JPanel implements MouseListener {
     public Color getSommetColor(Sommet sm){
         new Color(0, 0, 0);
         return switch (sm.getType()) {
-            case 1 -> new Color(20, 200, 100);
-            case 2 -> new Color(20, 150, 150);
+            case VILLE -> new Color(20, 200, 100);
+            case RESTAURANT -> new Color(20, 150, 150);
             default -> new Color(20, 100, 200);
         };
     }
@@ -269,6 +353,7 @@ public class Map extends JPanel implements MouseListener {
 
         int x = e.getX();
         int y = e.getY();
+        clicked = null;
         
 
         for(int i = 0; i < this.tab.size(); i++){
@@ -287,26 +372,35 @@ public class Map extends JPanel implements MouseListener {
                 //tmp1 = this.tab.getNode(i);
             }
         }
-        if(actionChoice.indicationType() == 0){
-            drawNeighbours = true;
-            drawPath = false;
-            actionChoice.hideIndication();
-            repaint();
-        }
-        else if(actionChoice.indicationType() == 1){
-            if(tmp1 == null) {
-                tmp1 = clicked;
-                System.out.println("tmp1 : " + tmp1.getName());
-            }
-            else {
-                tmp2 = clicked;
-                System.out.println("tmp2 : " + tmp2.getName());
+        if(clicked != null) {
+            if (actionChoice.getIndicationType() == 0) {
+                drawNeighbours = true;
+                drawPath = false;
                 actionChoice.hideIndication();
-                drawPath = true;
+                repaint();
+            } else if (actionChoice.getIndicationType() == 1) {
+                if (tmp1 == null) {
+                    tmp1 = clicked;
+                } else {
+                    tmp2 = clicked;
+                    actionChoice.hideIndication();
+                    drawPath = true;
+                }
+                drawNeighbours = false;
+                repaint();
+            } else if (actionChoice.getIndicationType() == 2) {
+                if (tmp1 == null) {
+                    tmp1 = clicked;
+                } else {
+                    tmp2 = clicked;
+                    actionChoice.hideIndication();
+                    compare = true;
+                }
+
+                repaint();
             }
-            drawNeighbours = false;
-            repaint();
         }
+        this.repaint();
     }
 
     @Override
@@ -407,5 +501,48 @@ public class Map extends JPanel implements MouseListener {
     }
     public void setTab(NodeList tab){
         this.tab = tab;
+    }
+
+    public Sommet getTmp1(){
+        return tmp1;
+    }
+    public Sommet getTmp2(){
+        return tmp2;
+    }
+    public Sommet getTmp3(){
+        return tmp3;
+    }
+    public void setTmp1(Sommet tmp1){
+        this.tmp1 = tmp1;
+    }
+    public void setTmp2(Sommet tmp2){
+        this.tmp2 = tmp2;
+    }
+    public void setTmp3(Sommet tmp3){
+        this.tmp3 = tmp3;
+    }
+    public void setDrawSpecialPath(boolean drawSpecialPath){
+        this.drawSpecialPath = drawSpecialPath;
+    }
+    public String getActionStr(){
+        if(drawNeighbours)
+            return "Voisins";
+        else if(drawPath)
+            return "Distance";
+        else if(compare)
+            return "Comparaison";
+        return null;
+    }
+    public int getAction(){
+        if(drawNeighbours)
+            return 0;
+        else if(drawPath)
+            return 1;
+        else if(compare)
+            return 2;
+        return -1;
+    }
+    public void setDrawNeighboursModified(int TTL){
+        drawNeighboursModified = TTL;
     }
 }
