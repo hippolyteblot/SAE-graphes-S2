@@ -2,33 +2,35 @@
 
 class Road{
 
-    private int type; // 0 : autoroute, 1 : departementale, 2 : regionnale, 3 : nationnale
+    enum RoadType{
+        AUTOROUTE,
+        NATIONALE,
+        DEPARTMENTALE
+    }
+    private RoadType type; // 0 : autoroute, 1 : departementale, 2 : regionnale, 3 : nationnale
     private int km;
 
     public Road(){
-        this.type = 0;
+        this.type = RoadType.AUTOROUTE;
         this.km = 0;
     }
 
-    public Road(int type, int km) {
+    public Road(RoadType type, int km) {
         this.type = type;
         this.km = km;
     }
 
-    public int getType() {
+    public RoadType getType() {
         return this.type;
     }
     public String getTypeStr() {
         String typeStr;
         switch(this.type){
-            case 1:
+            case DEPARTMENTALE:
                 typeStr = "departementale";
                 break;
-            case 2:
-                typeStr = "regionnale";
-                break;
-            case 3:
-                typeStr = "regionnale";
+            case NATIONALE:
+                typeStr = "nationnale";
                 break;
             default:
                 typeStr = "autoroute";
@@ -40,13 +42,10 @@ class Road{
     public char getCharType() {
         char typeStr;
         switch(this.type){
-            case 1:
+            case DEPARTMENTALE:
                 typeStr = 'D';
                 break;
-            case 2:
-                typeStr = 'R';
-                break;
-            case 3:
+            case NATIONALE:
                 typeStr = 'N';
                 break;
             default:
@@ -56,7 +55,7 @@ class Road{
         return typeStr;
     }
 
-    public void setType(int type) {
+    public void setType(RoadType type) {
         this.type = type;
     }
 

@@ -14,16 +14,17 @@ public class ActionChoice extends JPanel {
     int height;
     Graphics2D g2d;
 
-    JButton neighbors = new JButton("Neighbors");
-    JButton shortestPath = new JButton("Shortest path");
-    JButton compare = new JButton("Compare");
-    JButton addLocation = new JButton("Add location");
-    JButton removeLocation = new JButton("Remove location");
-    JButton addRoad = new JButton("Add road");
-    JButton manageData = new JButton("Manage data");
+    JButton neighbors = new JButton("Voisins");
+    JButton shortestPath = new JButton("Plus court chemin");
+    JButton compare = new JButton("Comparer");
+    JButton addLocation = new JButton("Ajouter un lieu");
+    JButton removeLocation = new JButton("Supprimer un lieu");
+    JButton manageRoad = new JButton("Gérer les routes");
+    JButton manageData = new JButton("Gérer les données");
     JButton zoomIn = new JButton("+");
     JButton zoomOut = new JButton("-");
     JPanel zoomer = new JPanel();
+    JLabel indication = new JLabel();
     boolean showingIndication = false;
     private int indicationType = -1;
 
@@ -54,7 +55,7 @@ public class ActionChoice extends JPanel {
         compare.setFont(new Font("Segoe UI", Font.PLAIN, 34));
         addLocation.setFont(new Font("Segoe UI", Font.PLAIN, 34));
         removeLocation.setFont(new Font("Segoe UI", Font.PLAIN, 34));
-        addRoad.setFont(new Font("Segoe UI", Font.PLAIN, 34));
+        manageRoad.setFont(new Font("Segoe UI", Font.PLAIN, 34));
         manageData.setFont(new Font("Segoe UI", Font.PLAIN, 34));
         zoomIn.setFont(new Font("Segoe UI", Font.PLAIN, 34));
         zoomOut.setFont(new Font("Segoe UI", Font.PLAIN, 34));
@@ -73,22 +74,31 @@ public class ActionChoice extends JPanel {
         setLayout(new FlowLayout());
         switch (type) {
             case 0:
-                JLabel label = new JLabel("Select a location");
-                label.setFont(new Font("Segoe UI", Font.PLAIN, 34));
-                label.setHorizontalAlignment(JLabel.CENTER);
-                label.setVerticalAlignment(JLabel.CENTER);
-                label.setSize(new Dimension(width, height));
-                add(label);
+                indication = new JLabel("Séléctionnez un lieu");
+                indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
+                indication.setHorizontalAlignment(JLabel.CENTER);
+                indication.setVerticalAlignment(JLabel.CENTER);
+                indication.setSize(new Dimension(width, height));
+                add(indication);
                 repaint();
                 break;
             case 1:
             case 2:
-                JLabel label2 = new JLabel("Select two locations");
-                label2.setFont(new Font("Segoe UI", Font.PLAIN, 34));
-                label2.setHorizontalAlignment(JLabel.CENTER);
-                label2.setVerticalAlignment(JLabel.CENTER);
-                label2.setSize(new Dimension(width, height));
-                add(label2);
+                indication = new JLabel("Séléctionnez deux lieux");
+                indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
+                indication.setHorizontalAlignment(JLabel.CENTER);
+                indication.setVerticalAlignment(JLabel.CENTER);
+                indication.setSize(new Dimension(width, height));
+                add(indication);
+                repaint();
+                break;
+            case 3:
+                indication = new JLabel("Séléctionnez le lieu à supprimer");
+                indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
+                indication.setHorizontalAlignment(JLabel.CENTER);
+                indication.setVerticalAlignment(JLabel.CENTER);
+                indication.setSize(new Dimension(width, height));
+                add(indication);
                 repaint();
                 break;
             default:
@@ -111,7 +121,7 @@ public class ActionChoice extends JPanel {
         add(compare);
         add(addLocation);
         add(removeLocation);
-        add(addRoad);
+        add(manageRoad);
         add(manageData);
 
         zoomer.add(zoomIn);
@@ -139,6 +149,7 @@ public class ActionChoice extends JPanel {
                 showIndication(2);
             }
         });
+
         manageData.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,7 +165,20 @@ public class ActionChoice extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 smViewer.infoAboutAction(3, 0);
                 frameManager.repaint();
-                System.out.println("add location");
+            }
+        });
+        manageRoad.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                smViewer.infoAboutAction(4, 0);
+                frameManager.repaint();
+            }
+        });
+
+        removeLocation.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showIndication(3);
             }
         });
                 // Zoom in event

@@ -44,7 +44,7 @@ public class FrameManager extends JFrame {
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         buildMenu();
 
-        map = new Map(1600, 800, tab, this);
+        map = new Map(1600, 800, tab, this, main);
         smViewer = new SmViewer(width-1600, height, tab, map, ps, main);
         map.setSmViewer(smViewer);
         actionChoice = new ActionChoice(width, height-800, map, smViewer, this, main);

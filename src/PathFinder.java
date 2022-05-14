@@ -149,7 +149,7 @@ public class PathFinder {
                 neighbors.addAll(getNeighbors(list.get(i).getValue(), TTL));
             }
         }
-        LinkedHashSet<Sommet> set = neighbors.stream().collect(Collectors.toCollection(LinkedHashSet::new));
+        LinkedHashSet<Sommet> set = new LinkedHashSet<>(neighbors);
         neighbors.clear();
         neighbors.addAll(set);
         return neighbors;
@@ -158,25 +158,22 @@ public class PathFinder {
     public Sommet getCloserNode(Sommet start, Sommet end, NodeList.NodeType type){
 
         Sommet closer = new Sommet();
-        ArrayList<Sommet> typeNodeStart = tab.getAllNodesOfType(type);
-        typeNodeStart.remove(start);
-        typeNodeStart.remove(end);
-        ArrayList<Sommet> typeNodeEnd = tab.getAllNodesOfType(type);
-        typeNodeEnd.remove(end);
-        typeNodeEnd.remove(start);
+        ArrayList<Sommet> typeNode = tab.getAllNodesOfType(type);
+        typeNode.remove(start);
+        typeNode.remove(end);
         ArrayList<Integer> distanceFromStart = new ArrayList<>();
         ArrayList<Integer> distanceFromEnd = new ArrayList<>();
-        for(Sommet sm : typeNodeStart){
+        for(Sommet sm : typeNode){
             distanceFromStart.add(getDistance(start, sm));
         }
-        for(Sommet sm : typeNodeEnd){
+        for(Sommet sm : typeNode){
             distanceFromEnd.add(getDistance(end, sm));
         }
         int min = Integer.MAX_VALUE;
-        for(int i = 0; i < typeNodeStart.size(); i++){
+        for(int i = 0; i < typeNode.size(); i++){
             if(distanceFromStart.get(i) + distanceFromEnd.get(i) < min){
                 min = distanceFromStart.get(i) + distanceFromEnd.get(i);
-                closer = typeNodeStart.get(i);
+                closer = typeNode.get(i);
             }
         }
         System.out.println("Closer node : " + closer.getName());

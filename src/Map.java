@@ -9,7 +9,9 @@ import java.awt.geom.*;
 
 public class Map extends JPanel implements MouseListener {
 
-    Color bgColor = new Color(238,238,238);
+    HashMap<Road.RoadType, Color> roadColor = new HashMap<Road.RoadType, Color>();
+    HashMap<NodeList.NodeType, Color> nodeColor = new HashMap<NodeList.NodeType, Color>();
+
     int width;
     int height;
     NodeList tab;
@@ -27,16 +29,23 @@ public class Map extends JPanel implements MouseListener {
     boolean drawSpecialPath = false;
     FrameManager fm;
     int drawNeighboursModified = 0;
+    Main main;
 
 
-    public Map(int width, int height, NodeList tab, FrameManager fm) {
+    public Map(int width, int height, NodeList tab, FrameManager fm, Main main) {
 
         this.tab = tab;
+        this.main = main;
         this.width = width;
         this.fm = fm;
 
+        // Dark theme
+        //setBackground(new Color(62, 61, 61));
+
         this.width = width;
         this.height = height;
+
+        setColorMap();
 
         setPosSm();
         findEquivalence();
@@ -212,7 +221,7 @@ public class Map extends JPanel implements MouseListener {
     public void paintAllLinks(Graphics g){
         for(NeighborsList s : tab){
             for(Cell c : s.getNeighbors()){
-                paintLink(s.getSommet(), c.getValue(), getRoadColor(c.getValue()), g, 3);
+                paintLink(s.getSommet(), c.getValue(), roadColor.get(c.getRoute().getType()), g, 3);
             }
         }
     }
@@ -232,7 +241,7 @@ public class Map extends JPanel implements MouseListener {
                 s.getX()+((50*(zoom-1))/4), // x
                 s.getY()+((50*(zoom-1))/4), // y
                 50/zoom, 50/zoom);
-        g2d.setColor(getSommetColor(s));
+        g2d.setColor(nodeColor.get(s.getType()));
         g2d.fill(circle);
     }
     public void findEquivalence(){
@@ -285,12 +294,13 @@ public class Map extends JPanel implements MouseListener {
     }
 
 
-    public Color getRoadColor(Sommet sm){
-        return switch (sm.getType()) {
-            case VILLE -> new Color(100, 20, 100);
-            case RESTAURANT -> new Color(200, 20, 150);
-            case LOISIR -> new Color(150, 20, 200);
-            default -> new Color(100, 20, 250);
+    /*
+    public Color getRoadColor(Cell cell){
+        return switch (cell.getRoute().getType()) {
+            case AUTOROUTE -> new Color(100, 20, 100);
+            case NATIONALE -> new Color(200, 20, 150);
+            case DEPARTMENTALE -> new Color(150, 20, 200);
+            default -> new Color(0, 0, 0);
         };
     }
 
@@ -302,6 +312,7 @@ public class Map extends JPanel implements MouseListener {
             default -> new Color(20, 100, 200);
         };
     }
+     */
 
     public void zoomIn(){
 
@@ -344,6 +355,17 @@ public class Map extends JPanel implements MouseListener {
             }
         }
 
+    }
+
+    public void setColorMap(){
+        nodeColor.put(NodeList.NodeType.VILLE, new Color(20, 200, 100));
+        nodeColor.put(NodeList.NodeType.RESTAURANT, new Color(20, 150, 150));
+        nodeColor.put(NodeList.NodeType.SERVICE, new Color(20, 100, 200));
+        nodeColor.put(NodeList.NodeType.LOISIR, new Color(20, 100, 200));
+
+        roadColor.put(Road.RoadType.AUTOROUTE, new Color(100, 20, 100));
+        roadColor.put(Road.RoadType.NATIONALE, new Color(200, 20, 150));
+        roadColor.put(Road.RoadType.DEPARTMENTALE, new Color(150, 20, 200));
     }
 
 
@@ -398,6 +420,18 @@ public class Map extends JPanel implements MouseListener {
                 }
 
                 repaint();
+            } else if (actionChoice.getIndicationType() == 3) {
+                if (clicked != null) {
+                    // Option pane for delete node
+                    int n = JOptionPane.showConfirmDialog(null,
+                            "Voulez-vous vraiment supprimer " + clicked.getName() +
+                                    " ?", "Suppression",
+                            JOptionPane.YES_NO_OPTION);
+                    if (n == JOptionPane.YES_OPTION) {
+                        main.removeNode(clicked);
+                    }
+                    actionChoice.hideIndication();
+                }
             }
         }
         this.repaint();

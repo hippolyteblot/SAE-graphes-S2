@@ -57,21 +57,43 @@ public class PathBuilder {
         boolean found = false;
         for (int i = 1; i < tab.get(tab.getNodeIndex(s)).size(); i++) {
             if(tab.get(tab.getNodeIndex(s)).get(i) == null){
-                tab.get(tab.getNodeIndex(s)).set(i, new Cell(s1, new Road(0, (int) Math.round(10000*distance(s,s1)))));
+                tab.get(tab.getNodeIndex(s)).set(i, new Cell(s1, new Road(Road.RoadType.AUTOROUTE,
+                        (int) Math.round(10000*distance(s,s1)))));
                 found = true;
             }
         }
         if(!found){
-            tab.get(tab.getNodeIndex(s)).add(new Cell(s1, new Road(0, (int) Math.round(10000*distance(s,s1)))));
+            tab.get(tab.getNodeIndex(s)).add(new Cell(s1, new Road(Road.RoadType.AUTOROUTE,
+                    (int) Math.round(10000*distance(s,s1)))));
         }
     }
     public void addAllLinks(Sommet s){
         for (Sommet s1 : linkedSm(s)) {
             if(!existingLink(s,s1)) {
                 addLink(s, s1);
-                System.out.println("Lien ajouté : "+s.getName()+" "+s1.getName());
             }
         }
+    }
+    public void addRoad(Sommet s1, Sommet s2, Road.RoadType type, int length){
+        tab.get(tab.getNodeIndex(s1)).add(new Cell(s2, new Road(type, length)));
+        tab.get(tab.getNodeIndex(s2)).add(new Cell(s1, new Road(type, length)));
+    }
+    public boolean deleteRoad(Sommet s1, Sommet s2){
+        boolean found = false;
+        for(int i = 0; i < tab.get(tab.getNodeIndex(s1)).size(); i++){
+            if(tab.get(tab.getNodeIndex(s1)).get(i).getValue().equals(s2)){
+                tab.get(tab.getNodeIndex(s1)).remove(i);
+                found = true;
+            }
+        }
+        if(found){
+            for(int i = 0; i < tab.get(tab.getNodeIndex(s2)).size(); i++){
+                if(tab.get(tab.getNodeIndex(s2)).get(i).getValue().equals(s1)){
+                    tab.get(tab.getNodeIndex(s2)).remove(i);
+                }
+            }
+        }
+        return found;
     }
     public void buildEveryLinks(){
         for (NeighborsList ls : tab) {
@@ -94,7 +116,8 @@ public class PathBuilder {
                     }
                     if(!found){
                         tab.get(linkedIndex).add(new Cell(ls.getSommet(),
-                                new Road(0, (int) Math.round(10000*distance(tab.get(linkedIndex).getSommet(),
+                                new Road(Road.RoadType.AUTOROUTE,
+                                        (int) Math.round(10000*distance(tab.get(linkedIndex).getSommet(),
                                         ls.getSommet()))))); // TODO : Pourquoi 10000 ?
                     }
                 }

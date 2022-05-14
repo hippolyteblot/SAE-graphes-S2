@@ -1,7 +1,10 @@
 
+import org.w3c.dom.Node;
+
 import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -103,20 +106,17 @@ public class Main {
         }
         return typeS;
     }
-    public int findTypeRoad(String str){
-        int typeS;
+    public Road.RoadType findTypeRoad(String str){
+        Road.RoadType typeS;
         switch(str){
             case "D":
-                typeS = 1;
-                break;
-            case "R":
-                typeS = 2;
+                typeS = Road.RoadType.DEPARTMENTALE;
                 break;
             case "N":
-                typeS = 3;
+                typeS = Road.RoadType.NATIONALE;
                 break;
             default:
-                typeS = 0;
+                typeS = Road.RoadType.AUTOROUTE;
                 break;
         }
         return typeS;
@@ -133,7 +133,7 @@ public class Main {
 
             String allRoad = linkStr.split("::")[0];;
             int km = Integer.parseInt(allRoad.split(",")[1]);
-            int type = findTypeRoad(allRoad.split(",")[0]);
+            Road.RoadType type = findTypeRoad(allRoad.split(",")[0]);
             strSm = strSm.replace(";", "");
             Sommet linkSm = new Sommet(strSm.split(",")[1], findTypeSm(strSm.split(",")[0]));
             Road route = new Road(type, km);
@@ -154,12 +154,26 @@ public class Main {
             }
         }
     }
+    public void removeNode(Sommet sm){
+        tab.remove(tab.getNodeIndex(sm));
+        for(NeighborsList nblist : tab){
+            for(int i = nblist.size()-1; i >= 0; i--){
+                if(nblist.get(i).getValue().equals(sm)){
+                    nblist.remove(i);
+                }
+            }
+        }
+        frame.reinit();
+    }
 
     public void reinit() throws Exception {
         tab.clear();
         remplir();
 
-        PathBuilder pb = new PathBuilder(tab);
+        rebuild(tab);
+    }
+    public void rebuild(NodeList nodeList){
+        PathBuilder pb = new PathBuilder(nodeList);
         pb.buildEveryLinks();
         pb.syncronize();
         pb.makeRelate();
@@ -173,6 +187,10 @@ public class Main {
 
     public void addSommet(Sommet sm){
         tab.add(new NeighborsList(new Cell(sm)));
+        frame.reinit();
+    }
+    public void applyNewList(NodeList nl){
+        tab = nl;
         frame.reinit();
     }
 
