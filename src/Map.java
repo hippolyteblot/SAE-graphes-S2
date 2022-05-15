@@ -48,13 +48,11 @@ public class Map extends JPanel implements MouseListener {
         setColorMap();
 
         setPosSm();
-        findEquivalence();
 
         setPreferredSize(new Dimension(width, height));
         setSize(width, height);
         addMouseListener(this);
         setVisible(true);
-        printPosition();
 
         pf = new PathFinder(tab);
     }
@@ -250,8 +248,6 @@ public class Map extends JPanel implements MouseListener {
                 for(int k = 1; k < this.tab.size(); k++){
                     if (tab.getNode(k).getName().equals(tab.get(i).get(j).getValue().getName())){
                         tab.get(i).get(j).setValue(tab.getNode(k));
-                        System.out.println("Equivalence found " + tab.get(i).get(j).getValue().getX() + ", " + tab.get(i).get(j).getValue().getY());
-                        System.out.println("and " + tab.getNode(k).getX() + ", " + tab.getNode(k).getY());
                     }
                 }
             }

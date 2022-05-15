@@ -101,6 +101,7 @@ public class PathBuilder {
         }
     }
     public double distance(Sommet s1, Sommet s2){
+        System.out.println(s2.getName());
         return Math.sqrt(Math.pow(s1.getLocX()-s2.getLocX(),2)+Math.pow(s1.getLocY()-s2.getLocY(),2));
     }
     public void syncronize(){
@@ -127,6 +128,7 @@ public class PathBuilder {
     }
     public void makeRelate(){ // TODO : Probleme au niveau de la distance (visiblement sur prime)
         ArrayList<Sommet> spanningTree = prim();
+        spanningTree.remove(null);
         for(int i = 0; i < spanningTree.size()-1; i++){
             if(!existingPath(spanningTree.get(i), spanningTree.get(i+1))){
                 addLink(spanningTree.get(i), spanningTree.get(i+1));

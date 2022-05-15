@@ -20,7 +20,6 @@ public class Main {
 
         remplir();
 
-        // JOptionPane for init or not
         preTraiter();
         PathFinder pf = new PathFinder(tab);
 
@@ -126,7 +125,6 @@ public class Main {
     public Cell[] readLink(String part2){
 
         int nbLink = part2.split("[a-zA-Z];").length-1;
-        System.out.println(nbLink);
         Cell linkTabCl[] = new Cell[nbLink];
         for(int i = 0; i < nbLink; i++){
             String linkStr = part2.split(";[A-Z]")[i];
@@ -149,13 +147,29 @@ public class Main {
         for(int i = 0; i < this.tab.size(); i++){
             for(int j = 0; j < this.tab.get(i).size(); j++){
                 for(int k = 0; k < this.tab.size(); k++){
-                    if (tab.getNode(k).getName().equals(tab.get(i).get(j).getValue().getName()) &&
+                    if (tab.getNode(k).getName().replace(" ", "").equals(
+                            tab.get(i).get(j).getValue().getName().replace(" ", "")) &&
                             tab.getNode(k).getType() == tab.get(i).get(j).getValue().getType()){
                         tab.get(i).get(j).setValue(tab.getNode(k));
+                        System.out.println("equivalence " + tab.get(i).get(j).getValue().getName());
                     }
                 }
             }
         }
+    }
+    public NodeList findEquivalence(NodeList list){
+        for(int i = 0; i < list.size(); i++){
+            for(int j = 0; j < list.get(i).size(); j++){
+                for(int k = 0; k < list.size(); k++){
+                    if (list.getNode(k).getName().replace(" ", "").equals(
+                            list.get(i).get(j).getValue().getName().replace(" ", "")) &&
+                            list.getNode(k).getType() == list.get(i).get(j).getValue().getType()){
+                        list.get(i).get(j).setValue(list.getNode(k));
+                    }
+                }
+            }
+        }
+        return list;
     }
     public void removeNode(Sommet sm){
         tab.remove(tab.getNodeIndex(sm));
@@ -175,12 +189,12 @@ public class Main {
         if(preTraiter()){
             rebuild(tab);
         }
-        findEquivalence();
         frame.setTab(tab);
         frame.reinit();
 
     }
     public void rebuild(NodeList nodeList){
+        nodeList = findEquivalence(nodeList);
         PathBuilder pb = new PathBuilder(nodeList);
         pb.buildEveryLinks();
         pb.syncronize();
@@ -188,7 +202,7 @@ public class Main {
 
         setTab(pb.getTab());
         pb.syncronize();
-        findEquivalence();
+        frame.reinit();
     }
 
     public void addSommet(Sommet sm){

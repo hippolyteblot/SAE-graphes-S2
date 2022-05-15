@@ -37,7 +37,7 @@ public class DataWriter {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileName = textField.getText();
+                fileName = textField.getText()+".csv";
                 frame.dispose();
                 writeAll(nodeList);
             }
@@ -58,7 +58,7 @@ public class DataWriter {
 
     public void writeAll(NodeList nodeList) {
         try {
-            fileWriter = new FileWriter(fileName);
+            fileWriter = new FileWriter("Data\\" + fileName);
             for(Sommet sommet : nodeList.getAllNodes()) {
                 stringBuilder.append(sommet.getCharType() + "," + sommet.getName() + "," + sommet.getLocX() + "," + sommet.getLocY() + ":;");
                 writeNeighbours(nodeList.get(nodeList.getNodeIndex(sommet)));
