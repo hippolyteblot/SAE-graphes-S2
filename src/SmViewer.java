@@ -249,6 +249,7 @@ public class SmViewer extends JPanel {
                     PathBuilder pathBuilder = new PathBuilder(tab);
                     pathBuilder.syncronize();
                     main.applyNewList(pathBuilder.getTab());
+                    map.repaint();
                 });
                 toolsPanel.add(syncRoute);
                 JButton buildRoute = new JButton("Construire les routes");

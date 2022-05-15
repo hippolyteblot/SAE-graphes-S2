@@ -1,4 +1,6 @@
 
+import org.w3c.dom.Node;
+
 import javax.swing.*;
 
 import java.io.IOException;
@@ -40,8 +42,6 @@ public class FrameManager extends JFrame {
         this.width = width;
         this.height = height;
         this.tab = tab;
-
-        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         buildMenu();
 
         map = new Map(1600, 800, tab, this, main);
@@ -147,6 +147,9 @@ public class FrameManager extends JFrame {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+    public void setTab(NodeList tab){
+        this.tab = tab;
     }
 
 }

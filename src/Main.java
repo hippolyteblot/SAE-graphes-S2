@@ -1,12 +1,4 @@
-
-import org.w3c.dom.Node;
-
 import javax.swing.*;
-import javax.xml.crypto.Data;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 
 public class Main {
@@ -17,10 +9,8 @@ public class Main {
     JFrame dataChoiceFrame;
     
     Main() throws Exception {
-
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         init();
-        afficherSommets();
-
     }
     public static void main(String []args) throws Exception {
         new Main();
@@ -30,18 +20,29 @@ public class Main {
 
         remplir();
 
-        PathBuilder pb = new PathBuilder(tab);
-        pb.buildEveryLinks();
-        pb.syncronize();
-        pb.makeRelate();
-
-        setTab(pb.getTab());
-        pb.syncronize();
-        findEquivalence();
-
+        // JOptionPane for init or not
+        preTraiter();
         PathFinder pf = new PathFinder(tab);
+
         frame = new FrameManager(tab, 1920, 1080, pf, this);
 
+
+    }
+
+    public boolean preTraiter(){
+        int nb = JOptionPane.showConfirmDialog(null, "Voulez-vous pré-traiter les données ?",
+                "Pré-traiter", JOptionPane.YES_NO_OPTION);
+        if(nb == JOptionPane.YES_OPTION){
+            PathBuilder pb = new PathBuilder(tab);
+            pb.buildEveryLinks();
+            pb.syncronize();
+            pb.makeRelate();
+
+            setTab(pb.getTab());
+            pb.syncronize();
+        }
+        findEquivalence();
+        return nb == JOptionPane.YES_OPTION;
     }
 
     public void afficherSommets(){
@@ -67,11 +68,11 @@ public class Main {
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
-            line = line.replace(" ", "");
+            //line = line.replace(" ", "");
             String part1 = line.split(":[0-9]|;|:")[0]; // ici pour la localisation
-            String part2 = line.split(":;")[1];
+            String part2 = line.split(":;")[1].replace(" ", "");
 
-            String type = part1.split(",[A-Z]")[0];
+            String type = part1.split(",[A-Z]")[0].replace(" ", "");
             String nom = part1.split(",")[1];
             Double[] pos = {Double.valueOf(part1.split((","))[2]), Double.valueOf(part1.split(",")[3])};
 
@@ -124,7 +125,8 @@ public class Main {
 
     public Cell[] readLink(String part2){
 
-        int nbLink = part2.split("[a-z];").length-1;
+        int nbLink = part2.split("[a-zA-Z];").length-1;
+        System.out.println(nbLink);
         Cell linkTabCl[] = new Cell[nbLink];
         for(int i = 0; i < nbLink; i++){
             String linkStr = part2.split(";[A-Z]")[i];
@@ -138,16 +140,17 @@ public class Main {
             Sommet linkSm = new Sommet(strSm.split(",")[1], findTypeSm(strSm.split(",")[0]));
             Road route = new Road(type, km);
             linkTabCl[i] = new Cell(linkSm, route);
+
         }
         return linkTabCl;
     }
-    //TODOO : A refaire (ou pas)
 
     public void findEquivalence(){
         for(int i = 0; i < this.tab.size(); i++){
             for(int j = 0; j < this.tab.get(i).size(); j++){
                 for(int k = 0; k < this.tab.size(); k++){
-                    if (tab.getNode(k).equals(tab.get(i).get(j).getValue())){
+                    if (tab.getNode(k).getName().equals(tab.get(i).get(j).getValue().getName()) &&
+                            tab.getNode(k).getType() == tab.get(i).get(j).getValue().getType()){
                         tab.get(i).get(j).setValue(tab.getNode(k));
                     }
                 }
@@ -169,8 +172,13 @@ public class Main {
     public void reinit() throws Exception {
         tab.clear();
         remplir();
+        if(preTraiter()){
+            rebuild(tab);
+        }
+        findEquivalence();
+        frame.setTab(tab);
+        frame.reinit();
 
-        rebuild(tab);
     }
     public void rebuild(NodeList nodeList){
         PathBuilder pb = new PathBuilder(nodeList);
@@ -181,8 +189,6 @@ public class Main {
         setTab(pb.getTab());
         pb.syncronize();
         findEquivalence();
-
-        frame.reinit();
     }
 
     public void addSommet(Sommet sm){

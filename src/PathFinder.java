@@ -23,11 +23,15 @@ public class PathFinder {
     }
 
     private void release(Map<Sommet,Double> distance, Map<Sommet,Sommet> previous, Sommet originNode, Cell currentLink) {
-        
-        if(distance.get(currentLink.getValue()) > (distance.get(originNode) + currentLink.getRoute().getKm())) {
+
+        Double value;
+        if((value = distance.get(currentLink.getValue())) == null)
+            value = Double.POSITIVE_INFINITY;
+
+        if(value > (distance.get(originNode) + currentLink.getRoute().getKm())) {
             distance.put(currentLink.getValue(), distance.get(originNode) + currentLink.getRoute().getKm());
 
-            previous.put(currentLink.getValue(), originNode); // Pb ici, (b, c) visiblement non relaché
+            previous.put(currentLink.getValue(), originNode);
         }
    
     }
@@ -48,7 +52,7 @@ public class PathFinder {
 
         Map<Sommet,Double> distance = new HashMap<Sommet,Double>();
         Map<Sommet,Sommet> previous = new HashMap<Sommet,Sommet>();
-        ArrayList<Sommet> restant = new ArrayList<Sommet>();
+        ArrayList<Sommet> restant = new ArrayList<>();
         ArrayList<Sommet> chemin = new ArrayList<Sommet>();
 
         initializeDistances(distance, startSm);
