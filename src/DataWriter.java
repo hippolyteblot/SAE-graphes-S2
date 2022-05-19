@@ -31,6 +31,7 @@ public class DataWriter {
         frame.setLayout(new FlowLayout());
         JLabel label = new JLabel("Nom du fichier : ");
         JTextField textField = new JTextField(10);
+        JLabel extension = new JLabel(".csv");
         JButton button = new JButton("Sauvegarder");
         frame.setVisible(true);
 
@@ -47,12 +48,15 @@ public class DataWriter {
         label.setFont(new Font("Arial", Font.PLAIN, 20));
         textField.setFont(new Font("Arial", Font.PLAIN, 20));
         button.setFont(new Font("Arial", Font.PLAIN, 20));
+        extension.setFont(new Font("Arial", Font.PLAIN, 20));
 
         panel.add(label);
         panel.add(textField);
+        panel.add(extension);
 
         frame.add(panel);
         frame.add(button);
+        frame.pack();
 
     }
 

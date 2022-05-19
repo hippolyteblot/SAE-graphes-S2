@@ -89,7 +89,7 @@ public class PathFinder {
     }
 
 
-    // Retourne la ville la plus ouverte à 2 de distances en fonction du mode (0 = ville, 1 = restaurant, ...)
+    // Retourne la ville la plus ouverte à 2 de distances en fonction du mode
     public Sommet mostOpen(Sommet sm1, Sommet sm2, NodeList.NodeType mode){
 
         ArrayList<Sommet> alreadyCheck = new ArrayList<Sommet>();
@@ -104,10 +104,10 @@ public class PathFinder {
                     counter[i]++;
                 }
                 NeighborsList liste = tab.get(tab.getNodeIndex(ls[i].get(j).getValue()));
-                for(int k = 0; k < liste.size(); k++){
-                    if(liste.get(k).getValue().getType() == mode &&
-                        !alreadyCheck.contains(liste.get(k).getValue())){
-                        alreadyCheck.add((liste.get(k).getValue()));
+                for (Cell cell : liste) {
+                    if (cell.getValue().getType() == mode &&
+                            !alreadyCheck.contains(cell.getValue())) {
+                        alreadyCheck.add((cell.getValue()));
                         counter[i]++;
                     }
                 }
@@ -118,7 +118,7 @@ public class PathFinder {
             return sm1;
         else if(counter[1] > counter[0])
             return sm2;
-        return new Sommet();
+        return new Sommet("Aucun", NodeList.NodeType.VILLE);
     }
     public Road getRoad(Sommet sm1, Sommet sm2){
         NeighborsList list = tab.get(tab.getNodeIndex(sm1));
@@ -129,9 +129,9 @@ public class PathFinder {
         return null;
     }
 
-    public int getDistance(Sommet sm1, Sommet sm2){
+    public double getDistance(Sommet sm1, Sommet sm2){
         ArrayList<Sommet> chemin = dijkstra(sm1, sm2);
-        int distance = 0;
+        double distance = 0;
         for(int i = 0; i < chemin.size()-1; i++){
             Road kmRoad = getRoad(chemin.get(i), chemin.get(i+1));
             if(kmRoad != null)
@@ -165,22 +165,21 @@ public class PathFinder {
         ArrayList<Sommet> typeNode = tab.getAllNodesOfType(type);
         typeNode.remove(start);
         typeNode.remove(end);
-        ArrayList<Integer> distanceFromStart = new ArrayList<>();
-        ArrayList<Integer> distanceFromEnd = new ArrayList<>();
+        ArrayList<Double> distanceFromStart = new ArrayList<>();
+        ArrayList<Double> distanceFromEnd = new ArrayList<>();
         for(Sommet sm : typeNode){
             distanceFromStart.add(getDistance(start, sm));
         }
         for(Sommet sm : typeNode){
             distanceFromEnd.add(getDistance(end, sm));
         }
-        int min = Integer.MAX_VALUE;
+        Double min = Double.MAX_VALUE;
         for(int i = 0; i < typeNode.size(); i++){
             if(distanceFromStart.get(i) + distanceFromEnd.get(i) < min){
                 min = distanceFromStart.get(i) + distanceFromEnd.get(i);
                 closer = typeNode.get(i);
             }
         }
-        System.out.println("Closer node : " + closer.getName());
         return closer;
 
     }

@@ -63,8 +63,8 @@ public class PathBuilder {
             }
         }
         if(!found){
-            tab.get(tab.getNodeIndex(s)).add(new Cell(s1, new Road(Road.RoadType.AUTOROUTE,
-                    (int) Math.round(10000*distance(s,s1)))));
+            tab.get(tab.getNodeIndex(s)).add(new Cell(s1, new Road(Road.detectType(s,s1),
+                    DistanceGetter.distance(s,s1))));
         }
     }
     public void addAllLinks(Sommet s){
@@ -117,17 +117,17 @@ public class PathBuilder {
                     }
                     if(!found){
                         tab.get(linkedIndex).add(new Cell(ls.getSommet(),
-                                new Road(Road.RoadType.AUTOROUTE,
-                                        (int) Math.round(10000*distance(tab.get(linkedIndex).getSommet(),
-                                        ls.getSommet()))))); // TODO : Pourquoi 10000 ?
+                                new Road(Road.detectType(tab.get(linkedIndex).getSommet(), ls.getSommet()),
+                                        DistanceGetter.distance(tab.get(linkedIndex).getSommet(), ls.getSommet()))));
                     }
                 }
 
             }
         }
     }
-    public void makeRelate(){ // TODO : Probleme au niveau de la distance (visiblement sur prime)
+    public void makeRelate(){
         ArrayList<Sommet> spanningTree = prim();
+        spanningTree.remove(null);
         spanningTree.remove(null);
         for(int i = 0; i < spanningTree.size()-1; i++){
             if(!existingPath(spanningTree.get(i), spanningTree.get(i+1))){

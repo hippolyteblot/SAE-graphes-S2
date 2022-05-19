@@ -8,16 +8,30 @@ class Road{
         DEPARTMENTALE
     }
     private RoadType type; // 0 : autoroute, 1 : departementale, 2 : regionnale, 3 : nationnale
-    private int km;
+    private double km;
 
     public Road(){
         this.type = RoadType.AUTOROUTE;
         this.km = 0;
     }
 
-    public Road(RoadType type, int km) {
+    public Road(RoadType type, double km) {
         this.type = type;
         this.km = km;
+    }
+    public static RoadType detectType(Sommet sommet, Sommet sommet1) {
+        RoadType type;
+        double distance = DistanceGetter.distance(sommet, sommet1);
+        if(distance < 3){
+            type = RoadType.DEPARTMENTALE;
+        }
+        else if(distance < 10){
+            type = RoadType.NATIONALE;
+        }
+        else {
+            type = RoadType.AUTOROUTE;
+        }
+        return type;
     }
 
     public RoadType getType() {
@@ -59,7 +73,7 @@ class Road{
         this.type = type;
     }
 
-    public int getKm() {
+    public double getKm() {
         return this.km;
     }
 

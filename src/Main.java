@@ -22,6 +22,7 @@ public class Main {
 
         preTraiter();
         PathFinder pf = new PathFinder(tab);
+        afficherSommets();
 
         frame = new FrameManager(tab, 1920, 1080, pf, this);
 
@@ -132,7 +133,7 @@ public class Main {
             String strSm = linkStr.split("::")[1];
 
             String allRoad = linkStr.split("::")[0];;
-            int km = Integer.parseInt(allRoad.split(",")[1]);
+            double km = Double.parseDouble(allRoad.split(",")[1]);
             Road.RoadType type = findTypeRoad(allRoad.split(",")[0]);
             strSm = strSm.replace(";", "");
             Sommet linkSm = new Sommet(strSm.split(",")[1], findTypeSm(strSm.split(",")[0]));
@@ -151,7 +152,6 @@ public class Main {
                             tab.get(i).get(j).getValue().getName().replace(" ", "")) &&
                             tab.getNode(k).getType() == tab.get(i).get(j).getValue().getType()){
                         tab.get(i).get(j).setValue(tab.getNode(k));
-                        System.out.println("equivalence " + tab.get(i).get(j).getValue().getName());
                     }
                 }
             }
@@ -170,6 +170,12 @@ public class Main {
             }
         }
         return list;
+    }
+    public void removeRoads(){
+        for(NeighborsList list : this.tab){
+            list.removeAll(list.getNeighbors());
+        }
+        frame.reinit();
     }
     public void removeNode(Sommet sm){
         tab.remove(tab.getNodeIndex(sm));

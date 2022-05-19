@@ -57,6 +57,7 @@ public class SmViewer extends JPanel {
         switch (type) {
             case 0 -> {
                 intro = new JLabel("Obtenir les voisins :");
+                intro.setAlignmentX(Component.CENTER_ALIGNMENT);
                 JLabel listIntro = new JLabel("Liste des voisins de " + map.getClicked().getName()
                         + " : ");
                 String list = pf.getNeighbors(map.getClicked(), TTL).toString();
@@ -101,7 +102,8 @@ public class SmViewer extends JPanel {
                 infoPanel.add(listIntro2);
                 Sommet s1 = map.getTmp1();
                 Sommet s2 = map.getTmp2();
-                int distance = pf.getDistance(s1, s2);
+                double distance = pf.getDistance(s1, s2);
+                distance = Math.round(distance * 100.0) / 100.0;
                 distanceLabel = new JLabel("Distance : " + distance + " km");
                 distanceLabel.setFont(new Font("arial", Font.PLAIN, 22));
                 JLabel way = new JLabel("Chemin :");
@@ -159,6 +161,7 @@ public class SmViewer extends JPanel {
             }
             case 2 -> {
                 intro = new JLabel("Comparaison de deux lieux :");
+                intro.setAlignmentX(Component.CENTER_ALIGNMENT);
                 JLabel label = new JLabel("Compare " + map.getTmp1().getName() + " and " + map.getTmp2().getName());
                 JLabel mostOpen = new JLabel("Le plus ouvert : " +
                         pf.mostOpen(map.getTmp1(), map.getTmp2(), NodeList.NodeType.VILLE));
@@ -188,9 +191,10 @@ public class SmViewer extends JPanel {
                 distanceLabel.setFont(littleFont);
             }
             case 3 -> {
-                JLabel addSm = new JLabel("Ajouter un lieu");
-                addSm.setFont(new Font("arial", Font.PLAIN, 22));
-                add(addSm);
+                intro = new JLabel("Ajouter un lieu");
+                intro.setFont(new Font("arial", Font.PLAIN, 22));
+                intro.setAlignmentX(Component.CENTER_ALIGNMENT);
+                add(intro);
                 JPanel namePanel = new JPanel();
                 JLabel name = new JLabel("Nom : ");
                 name.setFont(new Font("arial", Font.PLAIN, 22));
@@ -228,10 +232,12 @@ public class SmViewer extends JPanel {
                 typePanel.add(typeBox);
                 add(typePanel);
                 add(getAddButton(nameField, latitudeField, longitudeField, typeBox));
+                add(Box.createRigidArea(new Dimension(0, 300)));
             }
             case 4 -> {
                 intro = new JLabel("Gérer les routes");
                 intro.setFont(new Font("arial", Font.PLAIN, 22));
+                intro.setAlignmentX(Component.CENTER_ALIGNMENT);
                 add(intro);
                 add(Box.createRigidArea(new Dimension(0, 10)));
                 JPanel toolsPanel = new JPanel();
@@ -243,6 +249,10 @@ public class SmViewer extends JPanel {
                 removeRoute.setFont(new Font("arial", Font.PLAIN, 22));
                 removeRoute.addActionListener(e -> infoAboutAction(6, 0));
                 toolsPanel.add(removeRoute);
+                JButton removeAllRoute = new JButton("Supprimer toutes les routes");
+                removeAllRoute.setFont(new Font("arial", Font.PLAIN, 22));
+                removeAllRoute.addActionListener(e -> main.removeRoads());
+                toolsPanel.add(removeAllRoute);
                 JButton syncRoute = new JButton("Synchroniser les routes");
                 syncRoute.setFont(new Font("arial", Font.PLAIN, 22));
                 syncRoute.addActionListener(e -> {
@@ -261,6 +271,7 @@ public class SmViewer extends JPanel {
             case 5 -> {
                 intro = new JLabel("Ajouter une route");
                 intro.setFont(new Font("arial", Font.PLAIN, 22));
+                intro.setAlignmentX(Component.CENTER_ALIGNMENT);
                 add(intro);
                 add(Box.createRigidArea(new Dimension(0, 10)));
                 JPanel roadType = new JPanel();
@@ -314,6 +325,7 @@ public class SmViewer extends JPanel {
             case 6 -> {
                 intro = new JLabel("Supprimer une route");
                 intro.setFont(new Font("arial", Font.PLAIN, 22));
+                intro.setHorizontalAlignment(SwingConstants.CENTER);
                 add(intro);
                 JPanel nodeListPanel = new JPanel();
                 JComboBox<String> nodeList3 = getNodesComboBox();
@@ -353,6 +365,7 @@ public class SmViewer extends JPanel {
     }
     public JButton getAddButton(JTextField nameField, JTextField latitudeField, JTextField longitudeField, JComboBox<String> typeBox){
         JButton addButton = new JButton("Ajouter");
+        addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addButton.addActionListener(e -> {
             String name = nameField.getText();
             String lat = latitudeField.getText();
