@@ -36,5 +36,6 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="jackson-core-2.13.2" level="project" />
     <orderEntry type="library" name="googlecode.json.simple" level="project" />
+    <orderEntry type="library" name="formdev.flatlaf" level="project" />
   </component>
 </module>

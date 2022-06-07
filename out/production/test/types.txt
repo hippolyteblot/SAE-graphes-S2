@@ -1,54 +1,54 @@
-airport,Aéroport,T
+airport,Aéroport,S
 amusement_park,Parc d'attractions,L
 aquarium,Aquarium,L
 art_gallery,Galerie d'art,L
 bakery,Boulangerie,R
-bank,Banque,M
+bank,Banque,S
 bar,Bar,R
-beauty_salon,Salon de beauté,M
-bicycle_store,Magasin de vélos,M
+beauty_salon,Salon de beauté,S
+bicycle_store,Magasin de vélos,S
 bowling_alley,Bowling,L
-bus_station,Station de bus,T
+bus_station,Station de bus,S
 cafe,Café,R
 campground,Camping,L
-car_dealer,Concessionnaire,M
-car_rental,Location de voiture,M
-car_repair,Réparation de voitures,M
-car_wash,Station de lavage,M
+car_dealer,Concessionnaire,S
+car_rental,Location de voiture,S
+car_repair,Réparation de voitures,S
+car_wash,Station de lavage,S
 casino,Casino,L
-cemetery,Cimetière,A
-church,Eglise,A
-city_hall,Mairie,A
-clothing_store,Boutique de vêtements,M
-convenience_store,Epicerie,M
+cemetery,Cimetière,S
+church,Eglise,S
+city_hall,Mairie,S
+clothing_store,Boutique de vêtements,S
+convenience_store,Epicerie,S
 courthouse,Tribunal,A
 dentist,Dentiste,S
 doctor,Docteur,S
 electrician,Electricien,S
-electronics_store,Magasin d'électronique,M
+electronics_store,Magasin d'électronique,S
 embassy,Ambassade,A
 fire_station,Caserne de pompiers,A
-florist,Fleuriste,M
+florist,Fleuriste,S
 funeral_home,Maison funéraire,S
-furniture_store,Magasin de meubles,M
-gas_station,Station-essence,M
+furniture_store,Magasin de meubles,S
+gas_station,Station-essence,S
 gym,Gymnase,A
 hair_care,Soin pour cheveux,S
-hardware_store,Quincaillerie,M
-hindu_temple,Temple hindou,A
-home_goods_store,Magasin d'objet,M
+hardware_store,Quincaillerie,S
+hindu_temple,Temple hindou,S
+home_goods_store,Magasin d'objet,S
 hospital,Hôpital,S
 insurance_agency,Agence d'assurance,S
-jewelry_store,Bijouterie,M
+jewelry_store,Bijouterie,S
 laundry,Blanchisserie,S
 lawyer,Avocat,S
-library,Librairie,M
-liquor_store,Magasin d'alcool,M
+library,Librairie,S
+liquor_store,Magasin d'alcool,S
 locksmith,Serrurier,S
 lodging,Hébergement,S
 meal_delivery,Livraison de repas,S
 meal_takeaway,Repas à emporter,S
-mosque,Mosquée,A
+mosque,Mosquée,S
 movie_rental,Location de film,S
 movie_theater,Cinéma,L
 moving_company,Entreprise de déménagement,S
@@ -57,32 +57,32 @@ night_club,Boîte de nuit,L
 painter,Peintre,S
 park,Parc,L
 parking,Parking,S
-pet_store,Animalerie,M
-pharmacy,Pharmacie,M
+pet_store,Animalerie,S
+pharmacy,Pharmacie,S
 physiotherapist,Physiothérapeute,S
 plumber,Plombier,S
-police,Police,A
-post_office,Poste de police,A
-primary_school,Ecole primaire,A
+police,Police,S
+post_office,Poste de police,S
+primary_school,Ecole primaire,S
 real_estate_agency,Agence immobilière,S
 restaurant,Restaurant,R
 rv_park,Parc de camping-car,S
-school,Ecole,A
-secondary_school,Ecole secondaire,A
-shoe_store,Magasin de chaussures,M
-shopping_mall,Centre commercial,M
+school,Ecole,S
+secondary_school,Ecole secondaire,S
+shoe_store,Magasin de chaussures,S
+shopping_mall,Centre commercial,S
 spa,Spa,L
 stadium,Stade,L
 storage,Entrepôt,S
-store,Boutique,M
-subway_station,Station de métro,T
-supermarket,Supermarché,M
+store,Boutique,S
+subway_station,Station de métro,S
+supermarket,Supermarché,S
 synagogue,Synagogue,A
 taxi_stand,Station de taxi,S
 tourist_attraction,Attraction touristique,L
-train_station,Station de train,T
-transit_station,Gare de transport,T
+train_station,Station de train,S
+transit_station,Gare de transport,S
 travel_agency,Agence de voyage,S
-university,Université,A
+university,Université,S
 veterinary_care,Vétérinaire,S
 zoo,Zoo,L

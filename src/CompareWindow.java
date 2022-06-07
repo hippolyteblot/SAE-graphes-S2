@@ -1,18 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-
+/*
 public class CompareWindow extends JFrame {
 
     private JPanel contentPane = new JPanel();
-    private PathFinder pathFinder;
-    private Map map;
-    private NodeList tab;
+    private ProcessingEngine.PathFinder pathFinder;
+    private IHM.Map map;
+    private DataStructure.NodeList tab;
 
-    public CompareWindow(Map map, NodeList tab) {
+    public CompareWindow(IHM.Map map, DataStructure.NodeList tab) {
         super("Compare");
         this.map = map;
         this.tab = tab;
-        this.pathFinder = new PathFinder(tab);
+        this.pathFinder = new ProcessingEngine.PathFinder(tab);
         setContentPane(contentPane);
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         buildComponents();
@@ -23,11 +23,11 @@ public class CompareWindow extends JFrame {
     public void buildComponents(){
         JLabel label = new JLabel("Compare " + map.getTmp1().getName() + " and " + map.getTmp2().getName());
         JLabel mostOpen = new JLabel("Most open : " + pathFinder.mostOpen(map.getTmp1(), map.getTmp2(),
-                NodeList.NodeType.VILLE));
+                DataStructure.NodeList.NodeType.VILLE));
         JLabel mostGourmet = new JLabel("The most gourmet : " + pathFinder.mostOpen(map.getTmp1(), map.getTmp2(),
-                NodeList.NodeType.RESTAURANT));
+                DataStructure.NodeList.NodeType.RESTAURANT));
         JLabel mostCultural = new JLabel("The most cultural : " + pathFinder.mostOpen(map.getTmp1(), map.getTmp2(),
-                NodeList.NodeType.LOISIR));
+                DataStructure.NodeList.NodeType.LOISIR));
         JLabel distance = new JLabel("Distance : " + pathFinder.getDistance(map.getTmp1(), map.getTmp2()) + " km");
 
         contentPane.add(label);
@@ -52,3 +52,4 @@ public class CompareWindow extends JFrame {
         distance.setFont(littleFont);
     }
 }
+*/
