@@ -17,9 +17,9 @@ public class Main {
     Lecteur lect;
     NodeList tab = new NodeList();
     FrameManager frame;
-    JFrame dataChoiceFrame;
     double linkFactor = 1.5;
     Settings settings;
+    String fileName = "";
     
     Main() throws Exception {
         FlatDarkLaf.install();
@@ -51,7 +51,8 @@ public class Main {
     }
     public void init() throws Exception {
 
-        remplir();
+        fill();
+        removeDuplicates();
 
         preTraiter();
         PathFinder pf = new PathFinder(tab);
@@ -60,7 +61,7 @@ public class Main {
         applySettings();
     }
 
-    public boolean preTraiter(){
+    public void preTraiter(){
         int nb = JOptionPane.showConfirmDialog(null, "Voulez-vous pré-traiter les données ?",
                 "Pré-traiter", JOptionPane.YES_NO_OPTION);
         if(nb == JOptionPane.YES_OPTION){
@@ -73,7 +74,6 @@ public class Main {
             pb.syncronize();
         }
         findEquivalence();
-        return nb == JOptionPane.YES_OPTION;
     }
     public void serializeSettings(){
         try{
@@ -98,17 +98,17 @@ public class Main {
                     + cl.getRoute().getKm() + "km)");
 
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
 
-    public void remplir() throws Exception {
+    public void fill() throws Exception {
         lect = new Lecteur("src\\data.csv");
         int nb = lect.nbLine();
         for(int i = 0; i < nb; i++){
             String line = lect.getLine();
-            String part1 = line.split(":[0-9]|;|:")[0];
+            String part1 = line.split(":\\d|;|:")[0];
             String part2 = line.split(":;")[1].replace(" ", "");
 
             //String type = part1.split(",[a-zA-Z]")[0].replace(" ", "");
@@ -118,12 +118,12 @@ public class Main {
 
             NodeType typeS = findTypeSm(type);
             Sommet sm = new Sommet(nom, typeS, pos[0], pos[1]);
-            Cell linkTab[] = readLink(part2);
+            Cell[] linkTab = readLink(part2);
 
             this.tab.add(new NeighborsList(new Cell(sm)));
 
-            for(int j = 0; j < linkTab.length; j++){
-                this.tab.get(tab.size()-1).add(linkTab[j]);
+            for (Cell cell : linkTab) {
+                this.tab.get(tab.size() - 1).add(cell);
             }
         }
     }
@@ -131,52 +131,34 @@ public class Main {
     public NodeType findTypeSm(String str){
         NodeType typeS;
         str = str.replace(" ", "");
-        switch(str){
-            case "R":
-                typeS = NodeType.RESTAURANT;
-                break;
-            case "L":
-                typeS = NodeType.LOISIR;
-                break;
-            case "S":
-                typeS = NodeType.SERVICE;
-                break;
-            case "V":
-                typeS = NodeType.VILLE;
-                break;
-            default:
-                throw new IllegalArgumentException("Type de sommet non reconnu"+ str);
-        }
+        typeS = switch (str) {
+            case "R" -> NodeType.RESTAURANT;
+            case "L" -> NodeType.LOISIR;
+            case "S" -> NodeType.SERVICE;
+            case "V" -> NodeType.VILLE;
+            default -> throw new IllegalArgumentException("Type de sommet non reconnu" + str);
+        };
         return typeS;
     }
     public RoadType findTypeRoad(String str){
-        RoadType typeS;
-        switch(str){
-            case "D":
-                typeS = RoadType.DEPARTMENTALE;
-                break;
-            case "N":
-                typeS = RoadType.NATIONALE;
-                break;
-            case "A":
-                typeS = RoadType.AUTOROUTE;
-                break;
-            default:
-                throw new IllegalArgumentException("Type de route non reconnu " + str + ".");
-        }
-        return typeS;
+        return switch (str) {
+            case "D" -> RoadType.DEPARTMENTALE;
+            case "N" -> RoadType.NATIONALE;
+            case "A" -> RoadType.AUTOROUTE;
+            default -> throw new IllegalArgumentException("Type de route non reconnu " + str + ".");
+        };
     }
 
     public Cell[] readLink(String part2){
 
         int nbLink = part2.split("[a-zA-Z];").length-1;
-        Cell linkTabCl[] = new Cell[nbLink];
+        Cell[] linkTabCl = new Cell[nbLink];
         for(int i = 0; i < nbLink; i++){
             String linkStr = part2.split(";")[i];
             
             String strSm = linkStr.split("::")[1];
 
-            String allRoad = linkStr.split("::")[0];;
+            String allRoad = linkStr.split("::")[0];
             double km = Double.parseDouble(allRoad.split(",")[1]);
             RoadType type = findTypeRoad(allRoad.split(",")[0]);
             strSm = strSm.replace(";", "");
@@ -235,12 +217,11 @@ public class Main {
 
     public void reinit() throws Exception {
         tab.clear();
-        remplir();
-        if(preTraiter()){
-            rebuild(tab);
-        }
+        fill();
+        findEquivalence();
         frame.setTab(tab);
         frame.reinit();
+        frame.setTitle("Graphe - " + fileName);
 
     }
     public void rebuild(NodeList nodeList){
@@ -324,6 +305,22 @@ public class Main {
             updateUI();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    // Delete all duplicates nodes
+    public void removeDuplicates(){
+        for(Sommet sm1 : tab.getAllNodes()){
+            for(Sommet sm2 : tab.getAllNodes()){
+                if(sm1.getName().equals(sm2.getName()) && sm1.getType() == sm2.getType()
+                && sm1 != sm2){
+                    tab.remove(tab.getNodeIndex(sm2));
+                }
+            }
         }
     }
 }

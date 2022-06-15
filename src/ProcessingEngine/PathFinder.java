@@ -158,6 +158,7 @@ public class PathFinder {
         LinkedHashSet<Sommet> set = new LinkedHashSet<>(neighbors);
         neighbors.clear();
         neighbors.addAll(set);
+        neighbors.remove(sm);
         return neighbors;
     }
 

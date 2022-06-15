@@ -22,10 +22,6 @@ public class SmViewer extends JPanel {
 
     JPanel infoPanel;
     JLabel intro;
-
-    JLabel name;
-    JLabel type;
-    JLabel nbNeighLabel;
     JLabel typeLabel;
     ActionChoice actionChoice;
     Main main;
@@ -50,23 +46,6 @@ public class SmViewer extends JPanel {
     public void setActionChoice(ActionChoice actionChoice) {
         this.actionChoice = actionChoice;
     }
-    public void infoAboutSm() {
-        this.removeAll();
-
-        name = new JLabel("Nom : " + map.getClicked().getName());
-        type = new JLabel("Type : " + map.getClicked().getStringType());
-        int nbNeigh = tab.get(tab.getNodeIndex(map.getClicked())).size();
-        nbNeighLabel = new JLabel("Nombre de voisins : " + nbNeigh);
-
-        name.setFont(new Font("arial", Font.PLAIN, 22));
-        type.setFont(new Font("arial", Font.PLAIN, 22));
-
-        add(name);
-        add(type);
-        repaint();
-
-    }
-
     public void infoAboutNeigh(int TTL) {
         this.removeAll();
         intro = new JLabel("Obtenir les voisins :");
@@ -99,7 +78,6 @@ public class SmViewer extends JPanel {
         button.setFont(new Font("arial", Font.PLAIN, 22));
         add(button);
         updateUI();
-        System.out.println("czufbqiou");
     }
     public void infoAboutPath() {
         this.removeAll();
@@ -188,6 +166,7 @@ public class SmViewer extends JPanel {
         JLabel mostCultural = new JLabel("Le plus culturel : " +
                 pf.mostOpen(map.getTmp1(), map.getTmp2(), NodeType.LOISIR));
         distanceLabel = new JLabel("Distance : " + pf.getDistance(map.getTmp1(), map.getTmp2()) + " km");
+        JLabel nbNode = new JLabel("Nombre de noeuds : " + (pf.dijkstra(map.getTmp1(), map.getTmp2()).size()-1));
         add(label);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(label);
@@ -200,6 +179,8 @@ public class SmViewer extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(distanceLabel);
         add(Box.createRigidArea(new Dimension(0, 10)));
+        add(nbNode);
+        add(Box.createGlue());
         Font font = new Font("Arial", Font.PLAIN, 22);
         Font littleFont = new Font("Arial", Font.PLAIN, 20);
         label.setFont(font);
@@ -207,6 +188,7 @@ public class SmViewer extends JPanel {
         mostGourmet.setFont(littleFont);
         mostCultural.setFont(littleFont);
         distanceLabel.setFont(littleFont);
+        nbNode.setFont(littleFont);
 
         updateUI();
     }
@@ -271,7 +253,7 @@ public class SmViewer extends JPanel {
         toolsPanel.add(addRoute);
         JButton removeRoute = new JButton("Supprimer une route");
         removeRoute.setFont(new Font("arial", Font.PLAIN, 22));
-        removeRoute.addActionListener(e -> infoAboutAction(6, 0));
+        removeRoute.addActionListener(e -> infoAboutRemoveRoad());
         toolsPanel.add(removeRoute);
         JButton removeAllRoute = new JButton("Supprimer toutes les routes");
         removeAllRoute.setFont(new Font("arial", Font.PLAIN, 22));
@@ -305,8 +287,10 @@ public class SmViewer extends JPanel {
         JPanel roadType = new JPanel();
         JPanel nodeSelectedPanel = new JPanel();
         JComboBox<String> nodeList1 = getNodesComboBox();
+        nodeList1.setPreferredSize(new Dimension(200, 30));
         nodeSelectedPanel.add(nodeList1);
         JComboBox<String> nodeList2 = getNodesComboBox();
+        nodeList2.setPreferredSize(new Dimension(200, 30));
         nodeSelectedPanel.add(nodeList2);
         add(nodeSelectedPanel);
         JLabel roadTypeLabel = new JLabel("Type de route :");
@@ -352,212 +336,213 @@ public class SmViewer extends JPanel {
 
         updateUI();
     }
-    public void infoAboutAction(int type, int TTL){
-        this.removeAll();
-        switch (type) {
 
-            case 6 -> {
-                intro = new JLabel("Supprimer une route");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JPanel nodeListPanel = new JPanel();
-                JComboBox<String> nodeList3 = getNodesComboBox();
-                nodeListPanel.add(nodeList3);
-                JComboBox<String> nodeList4 = getNodesComboBox();
-                nodeListPanel.add(nodeList4);
-                add(nodeListPanel);
-                JButton deleteRoad = new JButton("Supprimer");
-                deleteRoad.setFont(new Font("arial", Font.PLAIN, 22));
-                deleteRoad.addActionListener(e -> {
-                    PathBuilder pathBuilder = new PathBuilder(tab, main.getLinkFactor());
-                    if (pathBuilder.deleteRoad(tab.getNodeByName(Objects.requireNonNull(nodeList3.getSelectedItem()).
-                                    toString()),
-                            tab.getNodeByName(Objects.requireNonNull(nodeList4.getSelectedItem()).toString()))) {
-                        main.applyNewList(pathBuilder.getTab());
-                        JOptionPane.showMessageDialog(null, "Route supprimée");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Pas de route à supprimer " +
-                                "entre ces deux lieux");
-                    }
-                });
-                add(deleteRoad);
+    public void infoAboutRemoveRoad() {
+        removeAll();
+        intro = new JLabel("Supprimer une route");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JPanel nodeListPanel = new JPanel();
+        JComboBox<String> nodeList3 = getNodesComboBox();
+        nodeList3.setPreferredSize(new Dimension(200, 30));
+        nodeListPanel.add(nodeList3);
+        JComboBox<String> nodeList4 = getNodesComboBox();
+        nodeList4.setPreferredSize(new Dimension(200, 30));
+        nodeListPanel.add(nodeList4);
+        add(nodeListPanel);
+        JButton deleteRoad = new JButton("Supprimer");
+        deleteRoad.setFont(new Font("arial", Font.PLAIN, 22));
+        deleteRoad.addActionListener(e -> {
+            PathBuilder pathBuilder = new PathBuilder(tab, main.getLinkFactor());
+            if (pathBuilder.deleteRoad(tab.getNodeByName(Objects.requireNonNull(nodeList3.getSelectedItem()).
+                            toString()),
+                    tab.getNodeByName(Objects.requireNonNull(nodeList4.getSelectedItem()).toString()))) {
+                main.applyNewList(pathBuilder.getTab());
+                JOptionPane.showMessageDialog(null, "Route supprimée");
+            } else {
+                JOptionPane.showMessageDialog(null, "Pas de route à supprimer " +
+                        "entre ces deux lieux");
             }
-            case 7 -> {
-                intro = new JLabel("Visualiser un lieu");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JLabel nodeName = new JLabel("Nom du lieu : " + map.getClicked().getName());
-                nodeName.setFont(new Font("arial", Font.PLAIN, 20));
-                add(nodeName);
-                JLabel nodeType = new JLabel("Type de lieu : " + map.getClicked().getStringType());
-                nodeType.setFont(new Font("arial", Font.PLAIN, 20));
-                add(nodeType);
-                JLabel nodeLat = new JLabel("Latitude : " + map.getClicked().getLocX());
-                nodeLat.setFont(new Font("arial", Font.PLAIN, 20));
-                add(nodeLat);
-                JLabel nodeLon = new JLabel("Longitude : " + map.getClicked().getLocY());
-                nodeLon.setFont(new Font("arial", Font.PLAIN, 20));
-                add(nodeLon);
-            }
-            case 8 -> {
-                intro = new JLabel("Gestion des lieux");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JButton addNode = new JButton("Ajouter un lieu");
-                addNode.setFont(new Font("arial", Font.PLAIN, 22));
-                addNode.addActionListener(e -> {
-                    infoAboutAddNode();
-                });
-                add(addNode);
-                JButton deleteNode = new JButton("Supprimer un lieu");
-                deleteNode.setFont(new Font("arial", Font.PLAIN, 22));
-                deleteNode.addActionListener(e -> {
-                    actionChoice.showIndication(3);
-                });
-                add(deleteNode);
-                JButton modifyNode = new JButton("Modifier un lieu");
-                modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
-                modifyNode.addActionListener(e -> {
-                    infoAboutAction(9, 2);
-                });
-                add(modifyNode);
-            }
-            case 9 -> {
-                intro = new JLabel("Modifier un lieu");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JPanel nodeListPanel = new JPanel();
-                JComboBox<String> nodeList5 = getNodesComboBox();
-                nodeListPanel.add(nodeList5);
-                add(nodeListPanel);
-                JButton modifyNode = new JButton("Modifier");
-                modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
-                modifyNode.addActionListener(e -> {
-                    tmp = tab.getNodeByName(Objects.requireNonNull(nodeList5.getSelectedItem()).toString());
-                    infoAboutAction(10, 0); // TODO : Bug null pointer
-                });
-                add(modifyNode);
+        });
+        add(deleteRoad);
 
-            }
-            case 10 -> {
-                intro = new JLabel("Propriétés du lieu");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JPanel namePanel = new JPanel();
-                JLabel nameLabel = new JLabel("Nom : ");
-                nameLabel.setFont(new Font("arial", Font.PLAIN, 20));
-                namePanel.add(nameLabel);
-                JTextField nameField = new JTextField();
-                nameField.setFont(new Font("arial", Font.PLAIN, 20));
-                nameField.setText(tmp.getName());
-                namePanel.add(nameField);
-                add(namePanel);
-                JPanel typePanel = new JPanel();
-                JLabel typeLabel = new JLabel("Type : ");
-                typeLabel.setFont(new Font("arial", Font.PLAIN, 20));
-                typePanel.add(typeLabel);
-                JComboBox<String> typeBox = new JComboBox<>();
-                typeBox.setFont(new Font("arial", Font.PLAIN, 20));
-                typeBox.addItem("ville");
-                typeBox.addItem("restaurant");
-                typeBox.addItem("service");
-                typeBox.addItem("loisir");
-                typeBox.setSelectedItem(tmp.getStringType());
-                typePanel.add(typeBox);
-                add(typePanel);
-                JPanel latPanel = new JPanel();
-                JLabel latLabel = new JLabel("Latitude : ");
-                latLabel.setFont(new Font("arial", Font.PLAIN, 20));
-                latPanel.add(latLabel);
-                JTextField latField = new JTextField();
-                latField.setFont(new Font("arial", Font.PLAIN, 20));
-                latField.setText(String.valueOf(tmp.getLocX()));
-                latPanel.add(latField);
-                add(latPanel);
-                JPanel lonPanel = new JPanel();
-                JLabel lonLabel = new JLabel("Longitude : ");
-                lonLabel.setFont(new Font("arial", Font.PLAIN, 20));
-                lonPanel.add(lonLabel);
-                JTextField lonField = new JTextField();
-                lonField.setFont(new Font("arial", Font.PLAIN, 20));
-                lonField.setText(String.valueOf(tmp.getLocY()));
-                lonPanel.add(lonField);
-                add(lonPanel);
-                JButton modifyNode = new JButton("Modifier");
-                modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
-                AtomicReference<Sommet> created = new AtomicReference<>(new Sommet());
-                modifyNode.addActionListener(e -> {
-                    if (nameField.getText().equals("")) {
-                        JOptionPane.showMessageDialog(null, "Le nom ne peut pas être vide");
-                    } else if (latField.getText().equals("")) {
-                        JOptionPane.showMessageDialog(null, "La latitude ne peut pas être vide");
-                    } else if (lonField.getText().equals("")) {
-                        JOptionPane.showMessageDialog(null, "La longitude ne peut pas être vide");
-                    } else {
-                        if (Objects.equals(typeBox.getSelectedItem(), "ville")) {
-                            created.set(new Sommet(nameField.getText(), NodeType.VILLE,
-                                    Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
-                        } else if (typeBox.getSelectedItem().equals("restaurant")) {
-                            created.set(new Sommet(nameField.getText(), NodeType.RESTAURANT,
-                                    Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
-                        } else if (typeBox.getSelectedItem().equals("service")) {
-                            created.set(new Sommet(nameField.getText(), NodeType.SERVICE,
-                                    Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
-                        } else if (typeBox.getSelectedItem().equals("loisir")) {
-                            created.set(new Sommet(nameField.getText(), NodeType.LOISIR,
-                                    Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
-                        }
-                        tab.removeListByOrigin(tmp);
-                        tab.add(new NodeList(new Cell(created.get())));
+        updateUI();
+    }
+    public void infoAboutNode(){
+        removeAll();
+        intro = new JLabel("Visualiser un lieu");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JLabel nodeName = new JLabel("Nom du lieu : " + map.getClicked().getName());
+        nodeName.setFont(new Font("arial", Font.PLAIN, 20));
+        add(nodeName);
+        JLabel nodeType = new JLabel("Type de lieu : " + map.getClicked().getStringType());
+        nodeType.setFont(new Font("arial", Font.PLAIN, 20));
+        add(nodeType);
+        JLabel nodeLat = new JLabel("Latitude : " + map.getClicked().getLocX());
+        nodeLat.setFont(new Font("arial", Font.PLAIN, 20));
+        add(nodeLat);
+        JLabel nodeLon = new JLabel("Longitude : " + map.getClicked().getLocY());
+        nodeLon.setFont(new Font("arial", Font.PLAIN, 20));
+        add(nodeLon);
+        updateUI();
+    }
+    public void infoAboutManageNodes(){
+        removeAll();
+        intro = new JLabel("Gestion des lieux");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JButton addNode = new JButton("Ajouter un lieu");
+        addNode.setFont(new Font("arial", Font.PLAIN, 22));
+        addNode.addActionListener(e -> infoAboutAddNode());
+        add(addNode);
+        JButton deleteNode = new JButton("Supprimer un lieu");
+        deleteNode.setFont(new Font("arial", Font.PLAIN, 22));
+        deleteNode.addActionListener(e -> actionChoice.showIndication(3));
+        add(deleteNode);
+        JButton modifyNode = new JButton("Modifier un lieu");
+        modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
+        modifyNode.addActionListener(e -> infoAboutModifyNodeSelection());
+        add(modifyNode);
 
-                        main.applyNewList(tab);
-                        JOptionPane.showMessageDialog(null, "Lieu modifié");
-                    }
-                });
-                add(modifyNode);
+        updateUI();
+    }
+    public void infoAboutModifyNodeSelection() {
+        removeAll();
+        intro = new JLabel("Modifier un lieu");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JPanel nodeListPanel = new JPanel();
+        JComboBox<String> nodeList5 = getNodesComboBox();
+        nodeListPanel.add(nodeList5);
+        add(nodeListPanel);
+        JButton modifyNode = new JButton("Modifier");
+        modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
+        modifyNode.addActionListener(e -> {
+            tmp = tab.getNodeByName(Objects.requireNonNull(nodeList5.getSelectedItem()).toString());
+            infoAboutModifyNode(); // TODO : Bug null pointer
+        });
+        add(modifyNode);
+        updateUI();
+    }
+    public void infoAboutModifyNode() {
+        removeAll();
+        intro = new JLabel("Propriétés du lieu");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JPanel namePanel = new JPanel();
+        JLabel nameLabel = new JLabel("Nom : ");
+        nameLabel.setFont(new Font("arial", Font.PLAIN, 20));
+        namePanel.add(nameLabel);
+        JTextField nameField = new JTextField();
+        nameField.setFont(new Font("arial", Font.PLAIN, 20));
+        nameField.setText(tmp.getName());
+        namePanel.add(nameField);
+        add(namePanel);
+        JPanel typePanel = new JPanel();
+        JLabel typeLabel = new JLabel("Type : ");
+        typeLabel.setFont(new Font("arial", Font.PLAIN, 20));
+        typePanel.add(typeLabel);
+        JComboBox<String> typeBox = new JComboBox<>();
+        typeBox.setFont(new Font("arial", Font.PLAIN, 20));
+        typeBox.addItem("ville");
+        typeBox.addItem("restaurant");
+        typeBox.addItem("service");
+        typeBox.addItem("loisir");
+        typeBox.setSelectedItem(tmp.getStringType());
+        typePanel.add(typeBox);
+        add(typePanel);
+        JPanel latPanel = new JPanel();
+        JLabel latLabel = new JLabel("Latitude : ");
+        latLabel.setFont(new Font("arial", Font.PLAIN, 20));
+        latPanel.add(latLabel);
+        JTextField latField = new JTextField();
+        latField.setFont(new Font("arial", Font.PLAIN, 20));
+        latField.setText(String.valueOf(tmp.getLocX()));
+        latPanel.add(latField);
+        add(latPanel);
+        JPanel lonPanel = new JPanel();
+        JLabel lonLabel = new JLabel("Longitude : ");
+        lonLabel.setFont(new Font("arial", Font.PLAIN, 20));
+        lonPanel.add(lonLabel);
+        JTextField lonField = new JTextField();
+        lonField.setFont(new Font("arial", Font.PLAIN, 20));
+        lonField.setText(String.valueOf(tmp.getLocY()));
+        lonPanel.add(lonField);
+        add(lonPanel);
+        JButton modifyNode = new JButton("Modifier");
+        modifyNode.setFont(new Font("arial", Font.PLAIN, 22));
+        AtomicReference<Sommet> created = new AtomicReference<>(new Sommet());
+        modifyNode.addActionListener(e -> {
+            if (nameField.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Le nom ne peut pas être vide");
+            } else if (latField.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "La latitude ne peut pas être vide");
+            } else if (Objects.equals(lonField.getText(), "")) {
+                JOptionPane.showMessageDialog(null, "La longitude ne peut pas être vide");
+            } else {
+                if (Objects.equals(typeBox.getSelectedItem(), "ville")) {
+                    created.set(new Sommet(nameField.getText(), NodeType.VILLE,
+                            Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
+                } else if (Objects.equals(typeBox.getSelectedItem(), "restaurant")) {
+                    created.set(new Sommet(nameField.getText(), NodeType.RESTAURANT,
+                            Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
+                } else if (Objects.equals(typeBox.getSelectedItem(), "service")) {
+                    created.set(new Sommet(nameField.getText(), NodeType.SERVICE,
+                            Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
+                } else if (Objects.equals(typeBox.getSelectedItem(), "loisir")) {
+                    created.set(new Sommet(nameField.getText(), NodeType.LOISIR,
+                            Double.parseDouble(latField.getText()), Double.parseDouble(lonField.getText())));
+                }
+                tab.removeListByOrigin(tmp);
+                tab.add(new NodeList(new Cell(created.get())));
+
+                main.applyNewList(tab);
+                JOptionPane.showMessageDialog(null, "Lieu modifié");
             }
-            case 11 -> {
-                intro = new JLabel("Visualiser le graphe");
-                intro.setFont(new Font("arial", Font.PLAIN, 22));
-                intro.setHorizontalAlignment(SwingConstants.CENTER);
-                add(intro);
-                JButton printAll = new JButton("Visualiser tous les lieux");
-                printAll.setFont(new Font("arial", Font.PLAIN, 22));
-                printAll.addActionListener(e -> {
-                    map.repaint();
-                });
-                add(printAll);
-                JButton printCity = new JButton("Visualiser les villes");
-                printCity.setFont(new Font("arial", Font.PLAIN, 22));
-                printCity.addActionListener(e -> {
-                    map.callSpecialDraw(NodeType.VILLE);
-                });
-                add(printCity);
-                JButton printRestaurant = new JButton("Visualiser les restaurants");
-                printRestaurant.setFont(new Font("arial", Font.PLAIN, 22));
-                printRestaurant.addActionListener(e -> {
-                    map.callSpecialDraw(NodeType.RESTAURANT);
-                });
-                add(printRestaurant);
-                JButton printService = new JButton("Visualiser les services");
-                printService.setFont(new Font("arial", Font.PLAIN, 22));
-                printService.addActionListener(e -> {
-                    map.callSpecialDraw(NodeType.SERVICE);
-                });
-                add(printService);
-                JButton printLoisir = new JButton("Visualiser les loisirs");
-                printLoisir.setFont(new Font("arial", Font.PLAIN, 22));
-                printLoisir.addActionListener(e -> {
-                    map.callSpecialDraw(NodeType.LOISIR);
-                });
-                add(printLoisir);
-            }
-        }
+        });
+        add(modifyNode);
+        updateUI();
+    }
+    public void infoAboutGraphVisualisation() {
+        removeAll();
+        intro = new JLabel("Visualiser le graphe");
+        intro.setFont(new Font("arial", Font.PLAIN, 22));
+        intro.setHorizontalAlignment(SwingConstants.CENTER);
+        add(intro);
+        JButton printAll = new JButton("Visualiser tous les lieux");
+        printAll.setFont(new Font("arial", Font.PLAIN, 22));
+        printAll.addActionListener(e -> map.repaint());
+        add(printAll);
+        JButton printCity = new JButton("Visualiser les villes");
+        printCity.setFont(new Font("arial", Font.PLAIN, 22));
+        printCity.addActionListener(e -> map.callSpecialDraw(NodeType.VILLE));
+        add(printCity);
+        JButton printRestaurant = new JButton("Visualiser les restaurants");
+        printRestaurant.setFont(new Font("arial", Font.PLAIN, 22));
+        printRestaurant.addActionListener(e -> map.callSpecialDraw(NodeType.RESTAURANT));
+        add(printRestaurant);
+        JButton printService = new JButton("Visualiser les services");
+        printService.setFont(new Font("arial", Font.PLAIN, 22));
+        printService.addActionListener(e -> map.callSpecialDraw(NodeType.SERVICE));
+        add(printService);
+        JButton printLoisir = new JButton("Visualiser les loisirs");
+        printLoisir.setFont(new Font("arial", Font.PLAIN, 22));
+        printLoisir.addActionListener(e -> map.callSpecialDraw(NodeType.LOISIR));
+        add(printLoisir);
+        Image img = new ImageIcon("src\\IHM\\legende.png").getImage();
+        if (main.getSettings().isDarkMod())
+            img = new ImageIcon("src\\IHM\\Blegende.png").getImage();
+        img = img.getScaledInstance(1032 / 3, 841 / 3, Image.SCALE_SMOOTH);
+        JLabel legend = new JLabel(new ImageIcon(img));
+        legend.setHorizontalAlignment(JLabel.CENTER);
+        legend.setVerticalAlignment(JLabel.CENTER);
+        add(legend);
         updateUI();
     }
     public JSlider getSliderPanel(){

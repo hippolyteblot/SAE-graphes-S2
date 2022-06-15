@@ -1,7 +1,5 @@
 package DataEngine;
 
-import DataEngine.DataGetter;
-import DataEngine.DataWriter;
 import IHM.FileSelector;
 import IHM.FrameManager;
 import Launch.Main;
@@ -28,7 +26,7 @@ public class DataManager extends JFrame {
         this.main = main;
         this.frameManager = frameManager;
         setTitle("Data Manager");
-        setSize(400, 500);
+        setSize(400, 220);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
 
@@ -68,7 +66,7 @@ public class DataManager extends JFrame {
                 DataGetter dg = null;
                 try {
                     dg = new DataGetter(main);
-                    dg.ereaseData();
+                    dg.eraseData();
                     main.reinit();
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);

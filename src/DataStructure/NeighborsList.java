@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class NeighborsList extends ArrayList<Cell> {
 
-    public NeighborsList(Cell origine){
-         add(origine);
+    public NeighborsList(Cell origin){
+         add(origin);
     }
 
     public ArrayList<Cell> getNeighbors() {
-        return new ArrayList<Cell>(this.subList(1, this.size()));
+        return new ArrayList<>(this.subList(1, this.size()));
     }
     public Cell getOrigin() {
         return this.get(0);

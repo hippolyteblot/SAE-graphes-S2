@@ -6,10 +6,9 @@ import ProcessingEngine.QueryConstructor;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 public class DataGetter {
@@ -18,12 +17,9 @@ public class DataGetter {
     private String radiusSelected;
     private int numberOfResultsSelected;
     private SearchBar sb;
-    private Main main;
-    private SearchBar searchBar;
 
     public DataGetter(Main main) throws FileNotFoundException {
         this.sb = new SearchBar(this, main);
-        this.main = main;
     }
 
     public void locationSelected() throws Exception {
@@ -40,16 +36,12 @@ public class DataGetter {
     }
 
     public JSONObject readJsonFromUrl(String url) throws IOException {
-        InputStream is = new URL(url).openStream();
-        JSONParser jsonP = new JSONParser();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            JSONObject json = (JSONObject)jsonP.parse(rd);
-            return json;
+        try (InputStream is = new URL(url).openStream()) {
+            JSONParser jsonP = new JSONParser();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            return (JSONObject) jsonP.parse(rd);
         } catch (ParseException e) {
             throw new RuntimeException(e);
-        } finally {
-            is.close();
         }
     }
 
@@ -69,14 +61,14 @@ public class DataGetter {
         file.flush();
         file.close();
     }
-    public void ereaseData() throws IOException {
+    public void eraseData() throws IOException {
         FileWriter file = new FileWriter("src\\data.csv", false);
         file.write("");
         file.flush();
         file.close();
     }
 
-    public String getLocationFromJSON(JSONObject json) throws IOException {
+    public String getLocationFromJSON(JSONObject json) {
         JSONArray jsonA = (JSONArray)json.get("candidates");
         if(jsonA.size() == 0) {
             System.out.println("No location found, default location = Lyon");
@@ -100,9 +92,7 @@ public class DataGetter {
     public void setLocationSelected(String location) {
         locationSelected = location;
     }
-    public void setSearchBar(SearchBar sb) {
-        this.sb = sb;
-    }
+
     public SearchBar getSearchBar() {
         return sb;
     }
@@ -116,15 +106,11 @@ public class DataGetter {
     public String getLocationSelected() {
         return locationSelected;
     }
-    public String getTypeSelected() {
-        return typeSelected;
-    }
+
     public String getRadiusSelected() {
         return radiusSelected;
     }
-    public int getNumbOfResults() {
-        return numberOfResultsSelected;
-    }
+
     public void setNumberOfResultsSelected(int numbOfResults) {
         this.numberOfResultsSelected = numbOfResults;
     }

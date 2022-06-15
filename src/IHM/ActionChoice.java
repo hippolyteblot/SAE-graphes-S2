@@ -1,41 +1,32 @@
 package IHM;
 
 import DataEngine.DataManager;
-import IHM.FrameManager;
-import IHM.SettingsFrame;
-import IHM.SmViewer;
 import Launch.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class ActionChoice extends JPanel {
     
-    int width;
-    int height;
-    Graphics2D g2d;
-
-    JButton neighbors = new JButton("Voisins");
-    JButton shortestPath = new JButton("Plus court chemin");
-    JButton compare = new JButton("Comparer");
-    JButton manageLocation = new JButton("Gérer les lieux");
-    JButton settings = new JButton("Options");
-    JButton manageRoad = new JButton("Gérer les routes");
-    JButton manageData = new JButton("Gérer les données");
-    JButton zoomIn = new JButton("+");
-    JButton zoomOut = new JButton("-");
-    JPanel zoomer = new JPanel();
-    JLabel indication = new JLabel();
-    boolean showingIndication = false;
+    private final int width;
+    private final int height;
+    private final JButton neighbors = new JButton("Voisins");
+    private final JButton shortestPath = new JButton("Plus court chemin");
+    private final JButton compare = new JButton("Comparer");
+    private final JButton manageLocation = new JButton("Gérer les lieux");
+    private final JButton settings = new JButton("Options");
+    private final JButton manageRoad = new JButton("Gérer les routes");
+    private final JButton manageData = new JButton("Gérer les données");
+    private final JButton zoomIn = new JButton("+");
+    private final JButton zoomOut = new JButton("-");
+    private final JPanel zoomer = new JPanel();
     private int indicationType = -1;
 
-    Map map;
-    SmViewer smViewer;
-    FrameManager frameManager;
-    Main main;
+    private final Map map;
+    private final SmViewer smViewer;
+    private final FrameManager frameManager;
+    private final Main main;
 
     public ActionChoice(int width, int height, Map map, SmViewer smViewer, FrameManager frameManager, Main main) {
 
@@ -65,82 +56,46 @@ public class ActionChoice extends JPanel {
         setVisible(true);
     }
 
-    public void setBtnBackground() {
-        Color backgroundColor = new Color(40, 40, 40);
-        neighbors.setBackground(backgroundColor);
-        shortestPath.setBackground(backgroundColor);
-        compare.setBackground(backgroundColor);
-        manageLocation.setBackground(backgroundColor);
-        settings.setBackground(backgroundColor);
-        manageRoad.setBackground(backgroundColor);
-        manageData.setBackground(backgroundColor);
-        zoomIn.setBackground(backgroundColor);
-        zoomOut.setBackground(backgroundColor);
-
-        Color foregroundColor = new Color(60, 60, 60);
-        neighbors.setForeground(foregroundColor);
-        shortestPath.setForeground(foregroundColor);
-        compare.setForeground(foregroundColor);
-        manageLocation.setForeground(foregroundColor);
-        settings.setForeground(foregroundColor);
-        manageRoad.setForeground(foregroundColor);
-        manageData.setForeground(foregroundColor);
-        zoomIn.setForeground(foregroundColor);
-        zoomOut.setForeground(foregroundColor);
-
-        // Change btn color
-        neighbors.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        shortestPath.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        compare.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        manageLocation.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        settings.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        manageRoad.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        manageData.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        zoomIn.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-        zoomOut.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
-
-    }
     public void showIndication(int type) {
         indicationType = type;
-        showingIndication = true;
         removeAll();
         setLayout(new FlowLayout());
+        JLabel indication;
         switch (type) {
-            case 0:
-                indication = new JLabel("Séléctionnez un lieu");
+            case 0 -> {
+                indication = new JLabel("Sélectionnez un lieu");
                 indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
                 indication.setHorizontalAlignment(JLabel.CENTER);
                 indication.setVerticalAlignment(JLabel.CENTER);
                 indication.setSize(new Dimension(width, height));
                 add(indication);
                 repaint();
-                break;
-            case 1:
-            case 2:
-                indication = new JLabel("Séléctionnez deux lieux");
+            }
+            case 1, 2 -> {
+                indication = new JLabel("Sélectionnez deux lieux");
                 indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
                 indication.setHorizontalAlignment(JLabel.CENTER);
                 indication.setVerticalAlignment(JLabel.CENTER);
                 indication.setSize(new Dimension(width, height));
                 add(indication);
                 repaint();
-                break;
-            case 3:
-                indication = new JLabel("Séléctionnez le lieu à supprimer");
+            }
+            case 3 -> {
+                indication = new JLabel("Sélectionnez le lieu à supprimer");
                 indication.setFont(new Font("Segoe UI", Font.PLAIN, 34));
                 indication.setHorizontalAlignment(JLabel.CENTER);
                 indication.setVerticalAlignment(JLabel.CENTER);
                 indication.setSize(new Dimension(width, height));
                 add(indication);
                 repaint();
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
+        updateUI();
     }
 
     public void hideIndication() {
-        showingIndication = false;
         removeAll();
         buildComponents();
         repaint();
@@ -159,86 +114,51 @@ public class ActionChoice extends JPanel {
 
         zoomer.add(zoomIn);
         zoomer.add(zoomOut);
+
+
+        add(zoomer);
         add(zoomer);
     }
 
     public void addBtnEvent(){
 
-        neighbors.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showIndication(0);
+        neighbors.addActionListener(e -> showIndication(0));
+        shortestPath.addActionListener(e -> showIndication(1));
+        compare.addActionListener(e -> showIndication(2));
+
+        manageData.addActionListener(e -> {
+            try {
+                new DataManager(frameManager, main);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        shortestPath.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showIndication(1);
-            }
+        manageLocation.addActionListener(e -> {
+            smViewer.infoAboutManageNodes();
+            map.setNothingTouched(false);
+            frameManager.repaint();
         });
-        compare.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showIndication(2);
-            }
+        manageRoad.addActionListener(e -> {
+            smViewer.infoAboutRoads();
+            map.setNothingTouched(false);
+            frameManager.repaint();
         });
 
-        manageData.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    new DataManager(frameManager, main);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        manageLocation.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                smViewer.infoAboutAction(8, 0);
-                map.setNothingTouched(false);
-                frameManager.repaint();
-            }
-        });
-        manageRoad.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                smViewer.infoAboutRoads();
-                map.setNothingTouched(false);
-                frameManager.repaint();
-            }
-        });
-
-        settings.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new SettingsFrame(main);
-            }
-        });
+        settings.addActionListener(e -> new SettingsFrame(main));
                 // Zoom in event
-        zoomIn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                map.zoomIn();
-                //map.paintComponent(map.getGraphics());
-                zoomOut.update(zoomOut.getGraphics());
-            }
+        zoomIn.addActionListener(e -> {
+            map.zoomIn();
+            //map.paintComponent(map.getGraphics());
+            zoomOut.update(zoomOut.getGraphics());
         });
                 // Zoom out event
-        zoomOut.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                map.zoomOut();
-                //map.paintComponent(map.getGraphics());
-                zoomIn.update(zoomIn.getGraphics());
-            }
+        zoomOut.addActionListener(e -> {
+            map.zoomOut();
+            //map.paintComponent(map.getGraphics());
+            zoomIn.update(zoomIn.getGraphics());
         });
     }
 
-    public boolean isShowingIndication() {
-        return showingIndication;
-    }
     public int getIndicationType() {
         return indicationType;
     }
@@ -251,4 +171,16 @@ public class ActionChoice extends JPanel {
     public JButton getZoomOut() {
         return zoomOut;
     }
+
+    public JButton getShortestPath() {
+        return shortestPath;
+    }
+    public JButton getCompare() {
+        return compare;
+    }
+
+    public JButton getManageData() {
+        return manageData;
+    }
+
 }

@@ -33,7 +33,10 @@ public class FileSelector extends JFrame {
                     fileName = chooser.getSelectedFile().getAbsolutePath();
                     writeFileToDataFile();
                     try {
+                        main.setFileName(chooser.getSelectedFile().getName());
                         main.reinit();
+                        // Close
+                        dispose();
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }

@@ -17,40 +17,37 @@ import static java.lang.Math.sqrt;
 
 public class Map extends JPanel implements MouseListener {
 
-    HashMap<RoadType, Color> roadColor = new HashMap<RoadType, Color>();
-    HashMap<NodeType, Color> nodeColor = new HashMap<NodeType, Color>();
-
-    int width;
-    int height;
-    NodeList tab;
-    ActionChoice actionChoice;
-    PathFinder pf;
-    Sommet clicked;
-    Sommet tmp1 = null;
-    Sommet tmp2 = null;
-    Sommet tmp3 = null;
-    Double zoom = 1.0;
-    SmViewer smViewer;
-    boolean drawNeighbours = false;
-    boolean drawPath = false;
-    boolean compare = false;
-    boolean drawSpecialPath = false;
-    int zoomCounter = 0;
-    FrameManager fm;
-    int drawNeighboursModified = 0;
-    Main main;
-    NodeType specialDraw = null;
-    boolean nothingTouched = true;
-    boolean dragging = false;
-    Point dragStart = null;
-    Color textColor = new Color(0, 0, 0);
+    private final HashMap<RoadType, Color> roadColor = new HashMap<>();
+    private final HashMap<NodeType, Color> nodeColor = new HashMap<>();
+    private int width;
+    private int height;
+    private NodeList tab;
+    private ActionChoice actionChoice;
+    private final PathFinder pf;
+    private Sommet clicked;
+    private Sommet tmp1 = null;
+    private Sommet tmp2 = null;
+    private Sommet tmp3 = null;
+    private Double zoom = 1.0;
+    private SmViewer smViewer;
+    private boolean drawNeighbours = false;
+    private boolean drawPath = false;
+    private boolean compare = false;
+    private boolean drawSpecialPath = false;
+    private int zoomCounter = 0;
+    private int drawNeighboursModified = 0;
+    private final Main main;
+    private NodeType specialDraw = null;
+    private boolean nothingTouched = true;
+    private boolean dragging = false;
+    private Point dragStart = null;
+    private Color textColor = new Color(0, 0, 0);
 
 
-    public Map(int width, int height, NodeList tab, FrameManager fm, Main main) {
+    public Map(int width, int height, NodeList tab, Main main) {
 
         this.tab = tab;
         this.main = main;
-        this.fm = fm;
 
         this.width = width;
         this.height = height;
@@ -193,11 +190,11 @@ public class Map extends JPanel implements MouseListener {
             clicked = null;
         }
         else if(clicked != null && !nothingTouched) {
-            smViewer.infoAboutAction(7, 0);
+            smViewer.infoAboutNode();
             clicked = null;
         }
         else if(nothingTouched) {
-            smViewer.infoAboutAction(11, 0);
+            smViewer.infoAboutGraphVisualisation();
         }
     }
 
@@ -494,16 +491,9 @@ public class Map extends JPanel implements MouseListener {
                     }
                     actionChoice.hideIndication();
                 }
-            } else if(clicked != null) {
-                //smViewer.infoAboutSm();
             }
         }
-        if (clicked == null) {
-            nothingTouched = true;
-        }
-        else {
-            nothingTouched = false;
-        }
+        nothingTouched = clicked == null;
         this.repaint();
     }
 
@@ -520,14 +510,10 @@ public class Map extends JPanel implements MouseListener {
 
     @Override
     public void mouseEntered(java.awt.event.MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mouseExited(java.awt.event.MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
     public Sommet getClicked(){
         return clicked;
@@ -557,38 +543,10 @@ public class Map extends JPanel implements MouseListener {
     public void setDrawSpecialPath(boolean drawSpecialPath){
         this.drawSpecialPath = drawSpecialPath;
     }
-    public String getActionStr(){
-        if(drawNeighbours)
-            return "Voisins";
-        else if(drawPath)
-            return "Distance";
-        else if(compare)
-            return "Comparaison";
-        return null;
-    }
-    public int getAction(){
-        if(drawNeighbours)
-            return 0;
-        else if(drawPath)
-            return 1;
-        else if(compare)
-            return 2;
-        return -1;
-    }
     public void setDrawNeighboursModified(int TTL){
         drawNeighboursModified = TTL;
     }
     public void setNothingTouched(boolean nothingTouched){
         this.nothingTouched = nothingTouched;
-    }
-    public void setDragging(boolean dragging){
-        this.dragging = dragging;
-    }
-    public void setDragStart(Point dragStart){
-        this.dragStart = dragStart;
-    }
-
-    public void move(Point move) {
-        setLocation(getX() + move.x, getY() + move.y);
     }
 }

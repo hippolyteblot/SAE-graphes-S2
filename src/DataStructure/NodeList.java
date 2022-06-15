@@ -20,13 +20,6 @@ public class NodeList extends ArrayList<NeighborsList> {
         }
         return -1;
     }
-    public void addNode(Sommet s){
-        add(new NeighborsList(new Cell(s)));
-    }
-
-    public int getNbNeighbors(Sommet s){
-        return get(getNodeIndex(s)).getNeighbors().size();
-    }
     public Sommet getNodeByName(String name){
         for(int i=0;i<size();i++){
             if(getNode(i).getName().replace(" ", "").equals(name.replace(" ", ""))){
@@ -37,9 +30,7 @@ public class NodeList extends ArrayList<NeighborsList> {
     }
 
     public void add(NodeList neighborsLists) {
-        for (NeighborsList neighborsList : neighborsLists) {
-            add(neighborsList);
-        }
+        this.addAll(neighborsLists);
     }
 
     public ArrayList<Sommet> getAllNodes(){

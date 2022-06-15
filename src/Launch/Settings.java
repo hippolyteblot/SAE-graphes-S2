@@ -1,8 +1,5 @@
 package Launch;
 
-import com.formdev.flatlaf.FlatLaf;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 
@@ -12,7 +9,6 @@ public class Settings implements Serializable {
     private int height;
     private double linkFactor;
     private boolean fullscreen;
-    private int queryCount;
     private boolean darkMod;
 
     public Settings() {
@@ -20,7 +16,6 @@ public class Settings implements Serializable {
         width = screenSize.width;
         height = screenSize.height;
         fullscreen = false;
-        queryCount = 0;
         linkFactor = 1.5;
     }
 
@@ -50,9 +45,6 @@ public class Settings implements Serializable {
         return fullscreen;
     }
 
-    public void setFullscreen(boolean fullscreen) {
-        this.fullscreen = fullscreen;
-    }
     public void setLinkFactor(double linkFactor){
         this.linkFactor = linkFactor;
     }
@@ -63,15 +55,4 @@ public class Settings implements Serializable {
         return linkFactor;
     }
 
-    public int getQueryCount() {
-        return queryCount;
-    }
-
-    public void setQueryCount(int queryCount) {
-        this.queryCount = queryCount;
-    }
-
-    public void incrementQueryCount() {
-        queryCount++;
-    }
 }

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URISyntaxException;
 
 public class FrameManager extends JFrame {
 
@@ -23,23 +24,23 @@ public class FrameManager extends JFrame {
     JSplitPane spliter2;
 
     JMenuBar menuBar = new JMenuBar();
-    JMenu dataMenu = new JMenu("Data");
-    JMenuItem loadData = new JMenuItem("Load data");
-    JMenuItem saveData = new JMenuItem("Save data");
-    JMenuItem eraseData = new JMenuItem("Erase data");
+    JMenu dataMenu = new JMenu("Données");
+    JMenuItem loadData = new JMenuItem("Gérer les données");
+    JMenuItem saveData = new JMenuItem("Sauvgarder le graphe");
+    JMenuItem eraseData = new JMenuItem("Supprimer le graphe");
 
     JMenu ToolsMenu = new JMenu("Outils");
-    JMenuItem findShortestPath = new JMenuItem("Find shortest path");
-    JMenuItem compare = new JMenuItem("Compare");
+    JMenuItem findShortestPath = new JMenuItem("Plus court chemin");
+    JMenuItem compare = new JMenuItem("Comparer");
 
     JMenu settingsMenu = new JMenu("Réglages");
-    JMenuItem modifier = new JMenuItem("Modifier");
+    JMenuItem modifier = new JMenuItem("Paramètres");
 
-    JMenu helpMenu = new JMenu("Help");
-    JMenuItem aboutDataImport = new JMenuItem("About data import");
-    JMenuItem aboutPathFinder = new JMenuItem("About path finder");
-    JMenuItem aboutPathBuiler = new JMenuItem("About path builder");
-    JMenuItem aboutElse = new JMenuItem("About else");
+    JMenu helpMenu = new JMenu("Aide");
+    JMenuItem aboutDataImport = new JMenuItem("A propos de l'importation");
+    JMenuItem aboutPathFinder = new JMenuItem("A propos de la recherche de chemin");
+    JMenuItem aboutPathBuiler = new JMenuItem("A propos de la Structure de données");
+    JMenuItem aboutElse = new JMenuItem("A propos");
     JCheckBoxMenuItem darkMode = new JCheckBoxMenuItem("Mode sombre");
 
     //Color backgroundColor = new Color(40, 40, 40);
@@ -54,7 +55,7 @@ public class FrameManager extends JFrame {
         buildMenu();
 
 
-        map = new Map(5000, 4000, tab, this, main); // 1600, 800
+        map = new Map(5000, 4000, tab, main); // 1600, 800
         smViewer = new SmViewer(width-1600, height, tab, map, ps, main, null);
         map.setSmViewer(smViewer);
         actionChoice = new ActionChoice(width, height-800, map, smViewer, this, main);
@@ -92,8 +93,6 @@ public class FrameManager extends JFrame {
                 }
             }
         });
-        // Move the map as the mouse is dragged
-
 
         JPanel container = new JPanel();
         container.setLayout(null);
@@ -114,6 +113,7 @@ public class FrameManager extends JFrame {
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
+
     }
 
 
@@ -139,6 +139,69 @@ public class FrameManager extends JFrame {
                 }
             }
         });
+        loadData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionChoice.getManageData().doClick();
+            }
+        });
+        findShortestPath.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionChoice.getShortestPath().doClick();
+            }
+        });
+        compare.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionChoice.getCompare().doClick();
+            }
+        });
+
+        aboutDataImport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open Google webPage
+                try {
+                    Desktop.getDesktop().browse(new java.net.URI("https://hippolyteblot.notion.site/Importation-de-donn-es-et-traitement-9bba51c875bc4cd4a9a9c5dee402d5f3"));
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        aboutPathFinder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open Google webPage
+                try {
+                    Desktop.getDesktop().browse(new java.net.URI("https://hippolyteblot.notion.site/Recherche-de-chemins-2bea83d07c7c418a96acb34b5bfd95d0"));
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        aboutPathBuiler.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open Google webPage
+                try {
+                    Desktop.getDesktop().browse(new java.net.URI("https://hippolyteblot.notion.site/Gestion-des-donn-es-Stockage-structure-enregistrement-789a09e4ead04d0ab178fb5fcd443d5c"));
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        aboutElse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open Google webPage
+                try {
+                    Desktop.getDesktop().browse(new java.net.URI("https://hippolyteblot.notion.site/Notes-SAE-Graphe-65ab0045d0774c0bb528ecbf45ca3b1c"));
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         dataMenu.setFont(new Font("Arial", Font.PLAIN, 16));
         loadData.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -156,10 +219,14 @@ public class FrameManager extends JFrame {
         aboutElse.setFont(new Font("Arial", Font.PLAIN, 16));
         darkMode.setFont(new Font("Arial", Font.PLAIN, 16));
 
+        if(main.getSettings().isDarkMod()) {
+            darkMode.setSelected(true);
+        } else {
+            darkMode.setSelected(false);
+        }
+
         menuBar.add(dataMenu);
         dataMenu.add(loadData);
-        dataMenu.add(saveData);
-        dataMenu.add(eraseData);
         menuBar.add(ToolsMenu);
         ToolsMenu.add(findShortestPath);
         ToolsMenu.add(compare);
