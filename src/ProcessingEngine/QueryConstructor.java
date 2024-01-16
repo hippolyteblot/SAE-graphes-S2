@@ -63,7 +63,7 @@ public class QueryConstructor {
         placesQuery = new StringBuffer();
         placesQuery.append("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=");
         placesQuery.append(what);
-        placesQuery.append("&inputtype=textquery&fields=formatted_address%2Cgeometry&key=AIzaSyDsSWpa4y-dsYA7BBA-I4xJq60be0qAHUI");
+        placesQuery.append("&inputtype=textquery&fields=formatted_address%2Cgeometry&key=$KEY");
     }
 
     public String getQuery() {
